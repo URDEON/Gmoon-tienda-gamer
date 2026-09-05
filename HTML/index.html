@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/inicio.css">
     <title>Gmoon | Tienda gamer</title>
 </head>
 <body>
@@ -15,26 +16,17 @@
             <img class="logo" src="../img/Portada_Gmoon.png" alt="Logo de Gmoon"><span class="eslogan">Tu tienda gamer</span>
             <button class="boton-categorias" type="button" aria-controls="menu-categorias" aria-expanded="false" aria-label="Abrir categorías"><span class="icono-menu"><i></i><i></i><i></i></span><span>Categorías</span></button>
             <form class="formulario-busqueda" role="search"><input type="search" placeholder="Busca aquí la tecnología para ti" aria-label="Buscar productos"><button type="submit" aria-label="Buscar">⌕</button></form>
-            <a class="enlace-cuenta" href="#">Hola, ingresa <span aria-hidden="true">⌄</span></a>
-            <a class="enlace-compras" href="#">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a>
+            <a class="enlace-cuenta" href="#">Hola, ingresa aquí!</a><a class="boton-iniciar-sesion" href="iniciar_sesion.html">Iniciar sesión</a>
+            <div class="acciones-compras"><a class="enlace-compras" href="mis_compras.html">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a></div>
         </div>
         <div class="menu-categorias" id="menu-categorias" aria-label="Categorías de productos">
             <a class="todas-categorias" href="">Todas las categorías <span>›</span></a>
-            <a href="#Productos">Consolas <span>›</span></a>
-            <a href="#Productos">Videojuegos <span>›</span></a>
-            <a href="#Productos">Juegos para PlayStation <span>›</span></a>
-            <a href="#Productos">Juegos para Xbox <span>›</span></a>
-            <a href="#Productos">Juegos para Nintendo Switch <span>›</span></a>
+            <a href="productos.html">Consolas <span>›</span></a>
+            <a href="productos.html">Videojuegos <span>›</span></a>
             <a href="#Productos">PC Gamer <span>›</span></a>
-            <a href="#Productos">Tarjetas gráficas y componentes <span>›</span></a>
             <a href="#Productos">Controles y mandos <span>›</span></a>
             <a href="#Productos">Audífonos gamer <span>›</span></a>
             <a href="#Productos">Teclados y mouse gamer <span>›</span></a>
-            <a href="#Productos">Sillas y escritorios gamer <span>›</span></a>
-            <a href="#Productos">Monitores gamer <span>›</span></a>
-            <a href="#Productos">Streaming y capturadoras <span>›</span></a>
-            <a href="#Productos">Accesorios para consolas <span>›</span></a>
-            <a href="#Productos">Realidad virtual <span>›</span></a>
             <a href="#Productos">Ofertas gamer <span>›</span></a>
         </div>
         <nav class="menu-movil ancho-encabezado" id="menu" aria-label="Navegación principal">
@@ -43,13 +35,59 @@
         <div class="barra-promocion">Únicos con compra online y retiro <strong>inmediato</strong> en tienda Gmoon en todo Chile.</div>
     </header>
     <main>
-        <section class="seccion-bienvenida"><div class="contenido-bienvenida">
+        <section class="seccion-bienvenida">
+            <div class="contenido-bienvenida">
                 <p class="etiqueta-seccion">GMOON GAMER STORE</p>
                     <h1>Tu próxima partida empieza aquí</h1>
                     <p>Encuentra juegos, accesorios y tecnología para llevar tu experiencia gamer al siguiente nivel.</p>
                     <a href="productos.html" class="boton-principal">Explora nuestros productos</a>
+            </div>
+        </section>
+        <section class="seccion-computadores" aria-labelledby="titulo-computadores">
+            <div class="encabezado-computadores">
+                <div>
+                    <p class="etiqueta-seccion">PARA TU SETUP</p>
+                    <h2 id="titulo-computadores">Computadores gamer</h2>
                 </div>
-                <div class="imagen-bienvenida"><div class="texto-imagen"><img src="../img/Imagen_Bienvenida.png" alt="Imagen de bienvenida"></div></div>
+                <a class="enlace-seccion" href="productos.html">Ver todos los productos <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="rejilla-computadores">
+                <article class="tarjeta-computador">
+                    <div class="visual-computador visual-computador-azul" aria-hidden="true"><span>GMOON</span><strong>STARTER</strong></div>
+                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Starter</h3><span class="precio-computador">$699.990</span><a href="productos.html">Ver producto</a></div>
+                </article>
+                <article class="tarjeta-computador">
+                    <div class="visual-computador visual-computador-morado" aria-hidden="true"><span>GMOON</span><strong>PRO</strong></div>
+                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Pro RGB</h3><span class="precio-computador">$999.990</span><a href="productos.html">Ver producto</a></div>
+                </article>
+                <article class="tarjeta-computador">
+                    <div class="visual-computador visual-computador-cyan" aria-hidden="true"><span>GMOON</span><strong>ULTRA</strong></div>
+                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Ultra</h3><span class="precio-computador">$1.399.990</span><a href="productos.html">Ver producto</a></div>
+                </article>
+            </div>
+        </section>
+        <section class="seccion-computadores" aria-labelledby="titulo-computadores">
+            <div class="encabezado-computadores">
+                <div>
+                    <p class="etiqueta-seccion">PARA TU SETUP</p>
+                    <h2 id="titulo-computadores">Computadores gamer</h2>
+                </div>
+                <a class="enlace-seccion" href="productos.html">Ver todos los productos <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="rejilla-computadores">
+                <article class="tarjeta-computador">
+                    <div class="visual-computador visual-computador-azul" aria-hidden="true"><span>GMOON</span><strong>STARTER</strong></div>
+                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Starter</h3><span class="precio-computador">$699.990</span><a href="productos.html">Ver producto</a></div>
+                </article>
+                <article class="tarjeta-computador">
+                    <div class="visual-computador visual-computador-morado" aria-hidden="true"><span>GMOON</span><strong>PRO</strong></div>
+                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Pro RGB</h3><span class="precio-computador">$999.990</span><a href="productos.html">Ver producto</a></div>
+                </article>
+                <article class="tarjeta-computador">
+                    <div class="visual-computador visual-computador-cyan" aria-hidden="true"><span>GMOON</span><strong>ULTRA</strong></div>
+                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Ultra</h3><span class="precio-computador">$1.399.990</span><a href="productos.html">Ver producto</a></div>
+                </article>
+            </div>
         </section>
     </main>
     <script src="../JS/menu.js"></script>
