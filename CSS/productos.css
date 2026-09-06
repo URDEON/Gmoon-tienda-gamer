@@ -75,10 +75,20 @@
 	display: grid;
 	place-items: center;
 	aspect-ratio: 1 / 1;
+	width: 100%;
+	min-height: 220px;
 	padding: 24px;
 	color: var(--cyan);
 	background: radial-gradient(circle, #25264e, #0b0c17 70%);
 	font-size: 64px;
+}
+
+.visual-producto img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: center;
 }
 
 .contenido-producto {

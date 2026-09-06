@@ -13,21 +13,19 @@
             <a href="#">Tiendas</a><a href="#">Centro de ayuda</a>
         </div></div>
         <div class="barra-principal"><div class="ancho-encabezado contenido-barra-principal">
-            <img class="logo" src="../img/Portada_Gmoon.png" alt="Logo de Gmoon"><span class="eslogan">Tu tienda gamer</span>
+            <a href="index.html" aria-label="Ir a la página principal"><img class="logo" src="../img/Portada_Gmoon.png" alt="Logo de Gmoon"></a><span class="eslogan">Tu tienda gamer</span>
             <button class="boton-categorias" type="button" aria-controls="menu-categorias" aria-expanded="false" aria-label="Abrir categorías"><span class="icono-menu"><i></i><i></i><i></i></span><span>Categorías</span></button>
             <form class="formulario-busqueda" role="search"><input type="search" placeholder="Busca aquí la tecnología para ti" aria-label="Buscar productos"><button type="submit" aria-label="Buscar">⌕</button></form>
-            <a class="enlace-cuenta" href="#">Hola, ingresa aquí!</a><a class="boton-iniciar-sesion" href="iniciar_sesion.html">Iniciar sesión</a>
+            <a class="enlace-cuenta" href="iniciar_sesion.html">Hola, ingresa aquí!</a>
             <div class="acciones-compras"><a class="enlace-compras" href="mis_compras.html">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a></div>
         </div>
         <div class="menu-categorias" id="menu-categorias" aria-label="Categorías de productos">
-            <a class="todas-categorias" href="">Todas las categorías <span>›</span></a>
-            <a href="productos.html">Consolas <span>›</span></a>
-            <a href="productos.html">Videojuegos <span>›</span></a>
-            <a href="#Productos">PC Gamer <span>›</span></a>
-            <a href="#Productos">Controles y mandos <span>›</span></a>
-            <a href="#Productos">Audífonos gamer <span>›</span></a>
-            <a href="#Productos">Teclados y mouse gamer <span>›</span></a>
-            <a href="#Productos">Ofertas gamer <span>›</span></a>
+            <a class="todas-categorias" href="#Productos">Todas las categorías <span>›</span></a>
+            <a href="#Explora">Explora la Tienda<span>›</span></a>
+            <a href="#Computadores">Computadores gamer <span>›</span></a>
+            <a href="#Nosotros">Nosotros <span>›</span></a>
+            <a href="#Blog">Blog gamer <span>›</span></a>
+            <a href="#Contacto">Contacto <span>›</span></a>
         </div>
         <nav class="menu-movil ancho-encabezado" id="menu" aria-label="Navegación principal">
             <a href="index.html">Inicio</a><a href="#Productos">Productos</a><a href="#Contacto">Contacto</a>
@@ -43,7 +41,42 @@
                     <a href="productos.html" class="boton-principal">Explora nuestros productos</a>
             </div>
         </section>
-        <section class="seccion-computadores" aria-labelledby="titulo-computadores">
+        <section class="seccion-categorias" id="Explora" aria-labelledby="titulo-categorias">
+            <div class="encabezado-computadores">
+                <div>
+                    <p class="etiqueta-seccion">EXPLORA LA TIENDA</p>
+                    <h2 id="titulo-categorias">Encuentra tu próxima partida</h2>
+                </div>
+                <a class="enlace-seccion" href="productos.html">Ver todo el catálogo <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="rejilla-categorias">
+                <a class="tarjeta-categoria tarjeta-categoria-consolas" href="productos.html">
+                    <span class="icono-categoria" aria-hidden="true">◆</span>
+                    <span class="marcador-imagen"><img src="../img/StickerConsolas_Modernas.png" alt="Consolas modernas"></span>
+                    <span class="contenido-categoria"><strong>Consolas modernas</strong><small>Potencia para jugar hoy</small></span>
+                    <span class="flecha-categoria" aria-hidden="true">→</span>
+                </a>
+                <a class="tarjeta-categoria tarjeta-categoria-retro" href="productos.html">
+                    <span class="icono-categoria" aria-hidden="true">◈</span>
+                    <span class="marcador-imagen"><img src="../img/StickerConsolas_Retro.png" alt="Consolas retro"></span>
+                    <span class="contenido-categoria"><strong>Consolas retro</strong><small>Clásicos que siguen vivos</small></span>
+                    <span class="flecha-categoria" aria-hidden="true">→</span>
+                </a>
+                <a class="tarjeta-categoria tarjeta-categoria-juegos" href="productos.html">
+                    <span class="icono-categoria" aria-hidden="true">✦</span>
+                    <span class="marcador-imagen"><img src="../img/Stiker_Videojuegos.png" alt="Videojuegos"></span>
+                    <span class="contenido-categoria"><strong>Videojuegos</strong><small>Nuevas historias por descubrir</small></span>
+                    <span class="flecha-categoria" aria-hidden="true">→</span>
+                </a>
+                <a class="tarjeta-categoria tarjeta-categoria-perifericos" href="productos.html">
+                    <span class="icono-categoria" aria-hidden="true">+</span>
+                    <span class="marcador-imagen"><img src="../img/StickerPereferico.png" alt="Periféricos"></span>
+                    <span class="contenido-categoria"><strong>Periféricos</strong><small>Equipa tu zona de juego</small></span>
+                    <span class="flecha-categoria" aria-hidden="true">→</span>
+                </a>
+            </div>
+        </section>
+        <section class="seccion-computadores" id="Computadores" aria-labelledby="titulo-computadores">
             <div class="encabezado-computadores">
                 <div>
                     <p class="etiqueta-seccion">PARA TU SETUP</p>
@@ -53,43 +86,115 @@
             </div>
             <div class="rejilla-computadores">
                 <article class="tarjeta-computador">
-                    <div class="visual-computador visual-computador-azul" aria-hidden="true"><span>GMOON</span><strong>STARTER</strong></div>
-                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Starter</h3><span class="precio-computador">$699.990</span><a href="productos.html">Ver producto</a></div>
+                    <div class="visual-computador visual-computador-azul" aria-hidden="true">
+                        <span class="marcador-imagen-computador"><img src="../img/PC/portada_pc_699.png" alt="PC Starter $699.990"></span>
+                        <span>GMOON</span><strong>STARTER</strong>
+                    </div>
+                    <div class="contenido-computador">
+                        <p>PC Gamer</p>
+                        <h3>Gmoon Starter</h3>
+                        <span class="precio-computador">$699.990</span>
+                        <a href="productos.html">Ver producto</a>
+                    </div>
                 </article>
                 <article class="tarjeta-computador">
-                    <div class="visual-computador visual-computador-morado" aria-hidden="true"><span>GMOON</span><strong>PRO</strong></div>
-                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Pro RGB</h3><span class="precio-computador">$999.990</span><a href="productos.html">Ver producto</a></div>
+                    <div class="visual-computador visual-computador-morado" aria-hidden="true">
+                        <span class="marcador-imagen-computador">IMAGEN AQUÍ</span><span>GMOON</span><strong>PRO</strong>
+                    </div>
+                    <div class="contenido-computador">
+                        <p>PC Gamer</p>
+                        <h3>Gmoon Pro RGB</h3>
+                        <span class="precio-computador">$999.990</span>
+                        <a href="productos.html">Ver producto</a>
+                    </div>
                 </article>
                 <article class="tarjeta-computador">
-                    <div class="visual-computador visual-computador-cyan" aria-hidden="true"><span>GMOON</span><strong>ULTRA</strong></div>
-                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Ultra</h3><span class="precio-computador">$1.399.990</span><a href="productos.html">Ver producto</a></div>
+                    <div class="visual-computador visual-computador-cyan" aria-hidden="true">
+                        <span class="marcador-imagen-computador">IMAGEN AQUÍ</span><span>GMOON</span><strong>ULTRA</strong>
+                    </div>
+                    <div class="contenido-computador">
+                        <p>PC Gamer</p>
+                        <h3>Gmoon Ultra</h3>
+                        <span class="precio-computador">$1.399.990</span>
+                        <a href="productos.html">Ver producto</a>
+                    </div>
                 </article>
             </div>
         </section>
-        <section class="seccion-computadores" aria-labelledby="titulo-computadores">
-            <div class="encabezado-computadores">
+        <section class="seccion-nosotros" id="Nosotros" aria-labelledby="titulo-nosotros">
+            <div class="contenido-nosotros">
+                <div class="visual-nosotros" aria-label="Espacio reservado para imagen de Gmoon"><img src="../img/Imagen_Bienvenida.png" alt=""></div>
                 <div>
-                    <p class="etiqueta-seccion">PARA TU SETUP</p>
-                    <h2 id="titulo-computadores">Computadores gamer</h2>
+                    <p class="etiqueta-seccion">CONOCE GMOON</p>
+                    <h2 id="titulo-nosotros">Más que una tienda, somos parte de tu partida</h2>
+                    <p>En Gmoon Gamer Store reunimos juegos, consolas y accesorios para que armes tu experiencia ideal. Nos mueve la pasión por jugar y las ganas de ayudarte a encontrar el equipo que realmente necesitas.</p>
+                    <p>Trabajamos para ofrecer una atención cercana, productos confiables y un espacio donde cada gamer pueda sentirse en casa.</p>
                 </div>
-                <a class="enlace-seccion" href="productos.html">Ver todos los productos <span aria-hidden="true">→</span></a>
             </div>
-            <div class="rejilla-computadores">
-                <article class="tarjeta-computador">
-                    <div class="visual-computador visual-computador-azul" aria-hidden="true"><span>GMOON</span><strong>STARTER</strong></div>
-                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Starter</h3><span class="precio-computador">$699.990</span><a href="productos.html">Ver producto</a></div>
+        </section>
+        <section class="seccion-blog" id="Blog" aria-labelledby="titulo-blog">
+            <div class="encabezado-blog">
+                <div>
+                    <p class="etiqueta-seccion">BLOG GMOON</p>
+                    <h2 id="titulo-blog">Ideas para mejorar tu partida</h2>
+                </div>
+                <a class="enlace-seccion" href="articulo.html">Ver todas las noticias <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="rejilla-blog">
+                <article class="tarjeta-blog">
+                    <div class="visual-blog" aria-label="Espacio reservado para imagen del artículo"><img src="../img/Stiker_Aqui_te_explicamos.png" alt=""></div>
+                    <div class="contenido-blog"><p>Guías gamer</p><h3>Cómo elegir tu próxima consola</h3><p>Comparamos opciones para que encuentres la consola que mejor se adapta a tu forma de jugar.</p><a href="articulo.html">Leer artículo <span aria-hidden="true">→</span></a></div>
                 </article>
-                <article class="tarjeta-computador">
-                    <div class="visual-computador visual-computador-morado" aria-hidden="true"><span>GMOON</span><strong>PRO</strong></div>
-                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Pro RGB</h3><span class="precio-computador">$999.990</span><a href="productos.html">Ver producto</a></div>
+                <article class="tarjeta-blog">
+                    <div class="visual-blog visual-blog-pink" aria-label="Espacio reservado para imagen del artículo"><img src="../img/Stiker_Setup_Gamer.png" alt=""></div>
+                    <div class="contenido-blog"><p>Setup gamer</p><h3>Arma un espacio cómodo para jugar</h3><p>Consejos simples para ordenar tus periféricos y disfrutar sesiones más cómodas.</p><a href="articulo.html">Leer artículo <span aria-hidden="true">→</span></a></div>
                 </article>
-                <article class="tarjeta-computador">
-                    <div class="visual-computador visual-computador-cyan" aria-hidden="true"><span>GMOON</span><strong>ULTRA</strong></div>
-                    <div class="contenido-computador"><p>PC Gamer</p><h3>Gmoon Ultra</h3><span class="precio-computador">$1.399.990</span><a href="productos.html">Ver producto</a></div>
-                </article>
+            </div>
+        </section>
+        <section class="seccion-contacto" id="Contacto" aria-labelledby="titulo-contacto">
+            <div class="encabezado-contacto">
+                <p class="etiqueta-seccion">ESTAMOS PARA AYUDARTE</p>
+                <h2 id="titulo-contacto">Visítanos y sigamos jugando</h2>
+                <p>¿Tienes dudas sobre un producto? Escríbenos o ven a conocernos. Estamos listos para ayudarte a encontrar tu próximo upgrade.</p>
+            </div>
+            <div class="rejilla-contacto">
+                <div class="datos-contacto">
+                    <a class="dato-contacto" href="tel:+56912345678">
+                        <span class="icono-contacto" aria-hidden="true">☎</span>
+                        <span><strong>+56 9 1234 5678</strong><small>Llámanos o escríbenos</small></span>
+                    </a>
+                    <a class="dato-contacto" href="mailto:contacto@gmoon.cl">
+                        <span class="icono-contacto" aria-hidden="true">@</span>
+                        <span><strong>contacto@gmoon.cl</strong><small>Respondemos tus consultas</small></span>
+                    </a>
+                    <div class="dato-contacto">
+                        <span class="icono-contacto" aria-hidden="true">◷</span>
+                        <span><strong>Lun. a sáb. · 10:00 a 19:00</strong><small>Horario de atención</small></span>
+                    </div>
+                </div>
+                <div class="ubicacion-contacto">
+                    <div class="visual-mapa" aria-label="Espacio reservado para el mapa"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6639.140427629687!2d-71.22170143622245!3d-33.69419122649975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966255eae610cb2f%3A0xc3fdb55ead51065b!2sDuoc%20UC%3A%20Sede%20Melipilla!5e0!3m2!1ses!2scl!4v1788715573711!5m2!1ses!2scl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+                    <div class="contenido-ubicacion">
+                        <div>
+                            <p class="etiqueta-seccion">ENCUÉNTRANOS</p>
+                            <h3>Gmoon Gamer Store</h3>
+                            <p>Dirección pendiente de actualizar<br>Chile</p>
+                        </div>
+                        <a class="boton-ubicacion" href="https://www.google.com/maps/search/?api=1&query=Gmoon+Gamer+Store+Chile" target="_blank" rel="noopener">Abrir ubicación <span aria-hidden="true">↗</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="redes-contacto" aria-label="Redes sociales">
+                <span>Síguenos en</span>
+                <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+                <a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a>
             </div>
         </section>
     </main>
+    <footer class="pie-sitio">
+        <p>© 2026 Gmoon Gamer Store · Tu próxima partida empieza aquí.</p>
+    </footer>
     <script src="../JS/menu.js"></script>
 </body>
 </html>
