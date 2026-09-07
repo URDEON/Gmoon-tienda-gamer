@@ -79,7 +79,15 @@ a {
 	display: flex;
 	align-items: center;
 	gap: 18px;
-	padding: 12px 0;
+	min-height: 46px;
+	padding: 10px 16px 10px 12px;
+	border: 1px solid rgb(0 229 255 / 55%);
+	color: var(--white);
+	background: #11131d;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: color .2s ease, border-color .2s ease, background .2s ease;
 }
 
 .icono-menu {
@@ -92,12 +100,15 @@ a {
 	display: block;
 	width: 20px;
 	height: 2px;
-	background: var(--white);
+	background: var(--cyan);
+	transition: transform .2s ease;
 }
 
 .boton-categorias:hover,
 .boton-categorias[aria-expanded="true"] {
 	color: var(--cyan);
+	border-color: var(--cyan);
+	background: #17132a;
 }
 
 .enlace-carrito {
@@ -146,27 +157,48 @@ a {
 	flex: 1;
 	max-width: 560px;
 	margin-left: 6px;
-	background: var(--white);
+	min-height: 46px;
+	border: 1px solid #3c2c6e;
+	background: #11131d;
+	box-shadow: inset 0 0 0 1px rgb(0 229 255 / 5%);
+	transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.formulario-busqueda:focus-within {
+	border-color: var(--cyan);
+	box-shadow: 0 0 0 3px rgb(0 229 255 / 12%);
 }
 
 /* 5. Buscador */
 .formulario-busqueda input {
 	width: 100%;
 	min-width: 0;
-	padding: 13px 9px;
+	padding: 12px 16px;
 	border: 0;
 	outline: 0;
 	color: var(--ink);
+	background: transparent;
 	font: inherit;
 }
 
+.formulario-busqueda input::placeholder {
+	color: #9698aa;
+}
+
 .formulario-busqueda button {
-	width: 48px;
+	width: 52px;
 	border: 0;
-	color: var(--slate);
-	background: var(--white);
+	border-left: 1px solid #3c2c6e;
+	color: var(--cyan);
+	background: #17132a;
 	font-size: 28px;
 	cursor: pointer;
+	transition: color .2s ease, background .2s ease;
+}
+
+.formulario-busqueda button:hover {
+	color: var(--charcoal);
+	background: var(--cyan);
 }
 
 @media (max-width: 1100px) and (min-width: 851px) {
@@ -318,9 +350,10 @@ a {
 	}
 
 	.contenido-barra-principal {
+		position: relative;
 		flex-wrap: wrap;
 		gap: 16px;
-		padding: 16px 0;
+		padding: 54px 0 16px;
 	}
 
 	.acciones-compras {
@@ -332,10 +365,22 @@ a {
 		height: 64px;
 	}
 
-	.enlace-cuenta,
 	.enlace-compras,
 	.boton-iniciar-sesion {
 		display: none;
+	}
+
+	.enlace-cuenta {
+		position: absolute;
+		top: 8px;
+		right: 0;
+		display: flex;
+		max-width: 170px;
+		overflow: hidden;
+		padding: 8px 10px;
+		font-size: 12px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.formulario-busqueda {
@@ -358,6 +403,7 @@ a {
 
 	.contenido-barra-principal {
 		gap: 10px;
+		padding-top: 54px;
 	}
 
 	.logo {
@@ -371,6 +417,22 @@ a {
 
 	.boton-categorias {
 		margin-left: auto;
+		padding-right: 12px;
+	}
+
+	.enlace-cuenta {
+		position: absolute;
+		top: 8px;
+		right: 0;
+		max-width: 150px;
+		overflow: hidden;
+		padding: 7px 8px;
+		font-size: 11px;
+		text-overflow: ellipsis;
+	}
+
+	.formulario-busqueda {
+		min-height: 44px;
 	}
 
 	.barra-promocion {
