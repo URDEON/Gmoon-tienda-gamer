@@ -5,226 +5,441 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../CSS/style.css">
 	<link rel="stylesheet" href="../CSS/productos.css">
-    <link rel="stylesheet" href="../CSS/inicio.css">
 	<title>Productos | Gmoon</title>
 </head>
 <body>
 	<header class="encabezado-sitio">
-		<div class="barra-superior"><div class="ancho-encabezado contenido-barra-superior">
-            <a href="index.html">Tiendas</a><a href="#">Centro de ayuda</a>
-        </div></div>
-        <div class="barra-principal"><div class="ancho-encabezado contenido-barra-principal">
-            <a href="index.html" aria-label="Ir a la página principal"><img class="logo" src="../img/Portada_Gmoon.png" alt="Logo de Gmoon"></a><span class="eslogan">Tu tienda gamer</span>
-            <button class="boton-categorias" type="button" aria-controls="menu-categorias" aria-expanded="false" aria-label="Abrir categorías"><span class="icono-menu"><i></i><i></i><i></i></span><span>Categorías</span></button>
-            <form class="formulario-busqueda" role="search"><input type="search" placeholder="Busca aquí la tecnología para ti" aria-label="Buscar productos"><button type="submit" aria-label="Buscar">⌕</button></form>
-            <a class="enlace-cuenta" href="iniciar_sesion.html">Hola, ingresa aquí!</a>
-            <div class="acciones-compras"><a class="enlace-compras" href="mis_compras.html">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a></div>
+
+    <div class="barra-superior"><div class="ancho-encabezado contenido-barra-superior">
+
+      <a href="index.html">Tiendas</a><a href="#">Centro de ayuda</a>
+
+    </div></div>
+
+    <div class="barra-principal"><div class="ancho-encabezado contenido-barra-principal">
+
+      <a href="index.html" aria-label="Ir a la página principal"><img class="logo" src="../img/Portada_Gmoon.png" alt="Logo de Gmoon"></a><span class="eslogan">Tu tienda gamer</span>
+
+      <button class="boton-categorias" type="button" aria-controls="menu-categorias" aria-expanded="false" aria-label="Abrir categorías"><span class="icono-menu"><i></i><i></i><i></i></span><span>Categorías</span></button>
+
+      <form class="formulario-busqueda" role="search"><input type="search" placeholder="Busca aquí la tecnología para ti" aria-label="Buscar productos"><button type="submit" aria-label="Buscar">⌕</button></form>
+
+      <a class="enlace-cuenta" href="iniciar_sesion.html">Hola, ingresa aquí!</a>
+
+      <div class="acciones-compras"><a class="enlace-compras" href="mis_compras.html">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a></div>
+
+    </div>
+
+    <div class="menu-categorias" id="menu-categorias" aria-label="Categorías de productos">
+
+      <a class="todas-categorias" href="productos.html">Todas las categorías <span>›</span></a>
+
+      <a href="#videojuegos">Videojuegos <span>›</span></a>
+
+      <a href="#Productos">Juegos para PlayStation <span>›</span></a>
+
+      <a href="#Productos">Juegos para Xbox <span>›</span></a>
+
+      <a href="#Productos">Juegos para Nintendo Switch <span>›</span></a>
+
+      <a href="#productos">Consolas <span>›</span></a>
+
+      <a href="#productos">Accesorios gamer <span>›</span></a>
+
+      <a href="#productos">Ofertas gamer <span>›</span></a>
+
+    </div>
+
+    <nav class="menu-movil ancho-encabezado" id="menu" aria-label="Navegación principal">
+
+      <a href="index.html">Inicio</a><a href="productos.html">Productos</a><a href="#contacto">Contacto</a>
+
+    </nav></div>
+
+    <div class="barra-promocion">Únicos con compra online y retiro <strong>inmediato</strong> en tienda Gmoon en todo Chile.</div>
+
+  </header>
+
+
+
+  <main>
+
+    <section class="seccion-catalogo" id="productos" aria-labelledby="titulo-productos">
+
+      <div class="encabezado-catalogo">
+
+        <div>
+
+          <p class="etiqueta-seccion">CATÁLOGO GMOON</p>
+
+          <h1 id="titulo-productos">Productos gamer</h1>
+
         </div>
-		<div class="menu-categorias" id="menu-categorias" aria-label="Categorías de productos">
-			<a class="todas-categorias" href="productos.html">Todas las categorías <span>›</span></a>
-            <a href="#videojuegos">Videojuegos <span>›</span></a>
-            <a href="#Productos">Juegos para PlayStation <span>›</span></a>
-            <a href="#Productos">Juegos para Xbox <span>›</span></a>
-            <a href="#Productos">Juegos para Nintendo Switch <span>›</span></a>
-			<a href="#productos">Consolas <span>›</span></a>
-            <a href="#productos">Accesorios gamer <span>›</span></a>
-            <a href="#productos">Ofertas gamer <span>›</span></a>
-		</div>
-		<nav class="menu-movil ancho-encabezado" id="menu" aria-label="Navegación principal">
-			<a href="index.html">Inicio</a><a href="productos.html">Productos</a><a href="#contacto">Contacto</a>
-		</nav></div>
-		<div class="barra-promocion">Únicos con compra online y retiro <strong>inmediato</strong> en tienda Gmoon en todo Chile.</div>
-	</header>
 
-	<main>
-		<section class="seccion-catalogo" id="productos" aria-labelledby="titulo-productos">
-			<div class="encabezado-catalogo">
-				<div>
-					<p class="etiqueta-seccion">CATÁLOGO GMOON</p>
-					<h1 id="titulo-productos">Productos gamer</h1>
-				</div>
-				<p class="texto-catalogo">Encuentra el equipo, juego o accesorio que necesitas para tu próxima partida.</p>
-			</div>
+        <p class="texto-catalogo">Encuentra el equipo, juego o accesorio que necesitas para tu próxima partida.</p>
 
-			<section id="videojuegos" class="grupo-categoria" aria-labelledby="titulo-videojuegos">
-				<h2 id="titulo-videojuegos" class="titulo-categoria">Videojuegos</h2>
-				<div class="rejilla-productos">
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">IMAGEN ACA</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Videojuegos</p>
-                            <h3>NOMBRE DEL JUEGO</h3>
-                            <p class="precio-producto">$49.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">IMAGEN ACA</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Videojuegos</p>
-                            <h3>NOMBRE DEL JUEGO</h3>
-                            <p class="precio-producto">$49.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-                    <article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">IMAGEN ACA</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Videojuegos</p>
-                            <h3>NOMBRE DEL JUEGO</h3>
-                            <p class="precio-producto">$49.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-                    <article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">IMAGEN ACA</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Videojuegos</p>
-                            <h3>NOMBRE DEL JUEGO</h3>
-                            <p class="precio-producto">$49.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-                    <article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">IMAGEN ACA</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Videojuegos</p>
-                            <h3>NOMBRE DEL JUEGO</h3>
-                            <p class="precio-producto">$49.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-                    <article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">IMAGEN ACA</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Videojuegos</p>
-                            <h3>NOMBRE DEL JUEGO</h3>
-                            <p class="precio-producto">$49.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-				</div>
-			</section>
+      </div>
 
-			<section id="consolas" class="grupo-categoria" aria-labelledby="titulo-consolas">
-				<h2 id="titulo-consolas" class="titulo-categoria">Consolas</h2>
-				<div class="rejilla-productos">
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">🎮</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Consolas</p>
-                            <h3>PlayStation 5 Slim</h3>
-                            <p class="precio-producto">$549.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">🕹️</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Consolas</p>
-                            <h3>Xbox Series X</h3><p class="precio-producto">$579.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-				</div>
-			</section>
 
-            <section id="Pc Gamer" class="grupo-categoria" aria-labelledby="titulo-accesorios">
-				<h2 id="titulo-accesorios" class="titulo-categoria">Pc Gamer de Escritorio</h2>
-				<div class="rejilla-productos">
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true"><img src="../img/PC/Pc_Gamer_starter_699.png" alt=""></div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">PC Gamer</p>
-                            <h3>PC Gamer Gmoon Starter</h3>
-                            <p class="precio-producto">$699.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-                    <article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">🖱️</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Periféricos</p>
-                            <h3>Mouse gamer ultraligero</h3>
-                            <p class="precio-producto">$39.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-				</div>
-			</section>
 
-			<section id="accesorios" class="grupo-categoria" aria-labelledby="titulo-accesorios">
-				<h2 id="titulo-accesorios" class="titulo-categoria">Accesorios gamer</h2>
-				<div class="rejilla-productos">
-					<article class="tarjeta-producto"><div class="visual-producto" aria-hidden="true">🎧</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Audífonos</p>
-                            <h3>Audífonos Gamer Pro</h3><p class="precio-producto">$69.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">⌨️</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Periféricos</p
-                            ><h3>Teclado mecánico RGB</h3><p class="precio-producto">$54.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-					<article class="tarjeta-producto">
-                        <div class="visual-producto" aria-hidden="true">🖱️</div>
-                        <div class="contenido-producto">
-                            <p class="categoria-producto">Periféricos</p>
-                            <h3>Mouse gamer ultraligero</h3>
-                            <p class="precio-producto">$39.990</p>
-                            <a class="boton-producto" href="#">Ver producto</a>
-                        </div>
-                    </article>
-					<article class="tarjeta-producto"><div class="visual-producto" aria-hidden="true">🪑</div><div class="contenido-producto"><p class="categoria-producto">Setup gamer</p><h3>Silla gamer ergonómica</h3><p class="precio-producto">$159.990</p><a class="boton-producto" href="#">Ver producto</a></div></article>
-				</div>
-			</section>
-		</section>
-        <section class="seccion-contacto" id="Contacto" aria-labelledby="titulo-contacto">
-            <div class="encabezado-contacto">
-                <p class="etiqueta-seccion">ESTAMOS PARA AYUDARTE</p>
-                <h2 id="titulo-contacto">Visítanos y sigamos jugando</h2>
-                <p>¿Tienes dudas sobre un producto? Escríbenos o ven a conocernos. Estamos listos para ayudarte a encontrar tu próximo upgrade.</p>
+      <section id="videojuegos" class="grupo-categoria" aria-labelledby="titulo-videojuegos">
+
+        <h2 id="titulo-videojuegos" class="titulo-categoria">Videojuegos</h2>
+
+        <div class="rejilla-productos">
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/video juegos deportes/FC_2027_PS4.png" alt="FC 2027 PS4"></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Videojuegos Deportes</p>
+
+              <h3>FC 2027 PS4</h3>
+
+              <p class="precio-producto">$90.000</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
             </div>
-            <div class="rejilla-contacto">
-                <div class="datos-contacto">
-                    <a class="dato-contacto" href="tel:+56912345678">
-                        <span class="icono-contacto" aria-hidden="true">☎</span>
-                        <span><strong>+56 9 1234 5678</strong><small>Llámanos o escríbenos</small></span>
-                    </a>
-                    <a class="dato-contacto" href="mailto:contacto@gmoon.cl">
-                        <span class="icono-contacto" aria-hidden="true">@</span>
-                        <span><strong>contacto@gmoon.cl</strong><small>Respondemos tus consultas</small></span>
-                    </a>
-                    <div class="dato-contacto">
-                        <span class="icono-contacto" aria-hidden="true">◷</span>
-                        <span><strong>Lun. a sáb. · 10:00 a 19:00</strong><small>Horario de atención</small></span>
-                    </div>
-                </div>
-                <div class="ubicacion-contacto">
-                    <div class="visual-mapa" aria-label="Espacio reservado para el mapa"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6639.140427629687!2d-71.22170143622245!3d-33.69419122649975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966255eae610cb2f%3A0xc3fdb55ead51065b!2sDuoc%20UC%3A%20Sede%20Melipilla!5e0!3m2!1ses!2scl!4v1788715573711!5m2!1ses!2scl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
-                    <div class="contenido-ubicacion">
-                        <div>
-                            <p class="etiqueta-seccion">ENCUÉNTRANOS</p>
-                            <h3>Gmoon Gamer Store</h3>
-                            <p>Dirección pendiente de actualizar<br>Chile</p>
-                        </div>
-                        <a class="boton-ubicacion" href="https://www.google.com/maps/search/?api=1&query=Gmoon+Gamer+Store+Chile" target="_blank" rel="noopener">Abrir ubicación <span aria-hidden="true">↗</span></a>
-                    </div>
-                </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/video juegos deportes/NBA 2K26_PS5.png" alt="NBA 2K26 PS5"></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Videojuegos Deportes</p>
+
+              <h3>NBA 2K26 PS5</h3>
+
+              <p class="precio-producto">$92.000</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
             </div>
-            <div class="redes-contacto" aria-label="Redes sociales">
-                <span>Síguenos en</span>
-                <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
-                <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
-                <a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/video juegos deportes/UFC_2027_PS5.png" alt="UFC 2027 PS5"></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Videojuegos Deportes</p>
+
+              <h3>UFC 2027 PS5</h3>
+
+              <p class="precio-producto">$29.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
             </div>
-        </section>
-	</main>
-	<script src="../JS/menu.js"></script>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/video juegos deportes/RUGBY20_PS4.png" alt="RUGBY 2024 PS4"></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Videojuegos</p>
+
+              <h3>RUGBY 2024 PS4</h3>
+
+              <p class="precio-producto">$35.500</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/video juegos deportes/FC27_PS5.png" alt="FC 2027 PS5"></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Videojuegos</p>
+
+              <h3>FC 2027 PS5</h3>
+
+              <p class="precio-producto">$55.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/video juegos deportes/FC26_PS5.png" alt="FC 2026 PS5"></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Videojuegos</p>
+
+              <h3>FC 2026 PS5</h3>
+
+              <p class="precio-producto">$35.550</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+
+      <section id="consolas" class="grupo-categoria" aria-labelledby="titulo-consolas">
+
+        <h2 id="titulo-consolas" class="titulo-categoria">Consolas</h2>
+
+        <div class="rejilla-productos">
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true">🎮</div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Consolas</p>
+
+              <h3>PlayStation 5 Slim</h3>
+
+              <p class="precio-producto">$549.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true">🕹️</div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Consolas</p>
+
+              <h3>Xbox Series X</h3><p class="precio-producto">$579.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+
+      <section id="Pc Gamer" class="grupo-categoria" aria-labelledby="titulo-accesorios">
+
+        <h2 id="titulo-accesorios" class="titulo-categoria">Pc Gamer de Escritorio</h2>
+
+        <div class="rejilla-productos">
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true"><img src="../img/PC/Pc_Gamer_starter_699.png" alt=""></div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">PC Gamer</p>
+
+              <h3>PC Gamer Gmoon Starter</h3>
+
+              <p class="precio-producto">$699.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true">🖱️</div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Periféricos</p>
+
+              <h3>Mouse gamer ultraligero</h3>
+
+              <p class="precio-producto">$39.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+
+      <section id="accesorios" class="grupo-categoria" aria-labelledby="titulo-accesorios">
+
+        <h2 id="titulo-accesorios" class="titulo-categoria">Accesorios gamer</h2>
+
+        <div class="rejilla-productos">
+
+          <article class="tarjeta-producto"><div class="visual-producto" aria-hidden="true">🎧</div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Audífonos</p>
+
+              <h3>Audífonos Gamer Pro</h3><p class="precio-producto">$69.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true">⌨️</div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Periféricos</p
+
+              ><h3>Teclado mecánico RGB</h3><p class="precio-producto">$54.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto">
+
+            <div class="visual-producto" aria-hidden="true">🖱️</div>
+
+            <div class="contenido-producto">
+
+              <p class="categoria-producto">Periféricos</p>
+
+              <h3>Mouse gamer ultraligero</h3>
+
+              <p class="precio-producto">$39.990</p>
+
+              <a class="boton-producto" href="#">Ver producto</a>
+
+            </div>
+
+          </article>
+
+          <article class="tarjeta-producto"><div class="visual-producto" aria-hidden="true">🪑</div><div class="contenido-producto"><p class="categoria-producto">Setup gamer</p><h3>Silla gamer ergonómica</h3><p class="precio-producto">$159.990</p><a class="boton-producto" href="#">Ver producto</a></div></article>
+
+        </div>
+
+      </section>
+
+    </section>
+
+    <section class="seccion-contacto" id="Contacto" aria-labelledby="titulo-contacto">
+
+      <div class="encabezado-contacto">
+
+        <p class="etiqueta-seccion">ESTAMOS PARA AYUDARTE</p>
+
+        <h2 id="titulo-contacto">Visítanos y sigamos jugando</h2>
+
+        <p>¿Tienes dudas sobre un producto? Escríbenos o ven a conocernos. Estamos listos para ayudarte a encontrar tu próximo upgrade.</p>
+
+      </div>
+
+      <div class="rejilla-contacto">
+
+        <div class="datos-contacto">
+
+          <a class="dato-contacto" href="tel:+56912345678">
+
+            <span class="icono-contacto" aria-hidden="true">☎</span>
+
+            <span><strong>+56 9 1234 5678</strong><small>Llámanos o escríbenos</small></span>
+
+          </a>
+
+          <a class="dato-contacto" href="mailto:contacto@gmoon.cl">
+
+            <span class="icono-contacto" aria-hidden="true">@</span>
+
+            <span><strong>contacto@gmoon.cl</strong><small>Respondemos tus consultas</small></span>
+
+          </a>
+
+          <div class="dato-contacto">
+
+            <span class="icono-contacto" aria-hidden="true">◷</span>
+
+            <span><strong>Lun. a sáb. · 10:00 a 19:00</strong><small>Horario de atención</small></span>
+
+          </div>
+
+        </div>
+
+        <div class="ubicacion-contacto">
+
+          <div class="visual-mapa" aria-label="Espacio reservado para el mapa"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6639.140427629687!2d-71.22170143622245!3d-33.69419122649975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966255eae610cb2f%3A0xc3fdb55ead51065b!2sDuoc%20UC%3A%20Sede%20Melipilla!5e0!3m2!1ses!2scl!4v1788715573711!5m2!1ses!2scl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+
+          <div class="contenido-ubicacion">
+
+            <div>
+
+              <p class="etiqueta-seccion">ENCUÉNTRANOS</p>
+
+              <h3>Gmoon Gamer Store</h3>
+
+              <p>Dirección pendiente de actualizar<br>Chile</p>
+
+            </div>
+
+            <a class="boton-ubicacion" href="https://www.google.com/maps/search/?api=1&query=Gmoon+Gamer+Store+Chile" target="_blank" rel="noopener">Abrir ubicación <span aria-hidden="true">↗</span></a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="redes-contacto" aria-label="Redes sociales">
+
+        <span>Síguenos en</span>
+
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+
+        <a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="../JS/menu.js"></script>
 </body>
 </html>
