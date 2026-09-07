@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/articulo.css">
     <link rel="stylesheet" href="../CSS/inicio.css">
     <title>Gmoon | Noticias & Artículos</title>
 </head>
@@ -29,8 +30,16 @@
         <div class="barra-promocion">Únicos con compra online y retiro <strong>inmediato</strong> en tienda Gmoon en todo Chile.</div>
     </header>
     <main>
-        <!-- INICIO DEL MAIN: aquí comienza el contenido asignado de esta página. -->
-        <P>INICIO DEL MAIN: aquí comienza el contenido asignado de est página</P>
+        <article class="detalle-articulo" aria-labelledby="titulo-articulo">
+            <a class="boton-volver-blog" href="index.html#Blog"><span aria-hidden="true">←</span> Volver al blog</a>
+            <div class="encabezado-articulo">
+                <p id="categoria-articulo" class="etiqueta-seccion">Categoría del artículo</p>
+                <h1 id="titulo-articulo">Título del artículo</h1>
+                <p id="resumen-articulo" class="resumen-articulo">Resumen del artículo</p>
+            </div>
+            <div class="visual-articulo"><img id="imagen-articulo" src="" alt="Imagen del artículo"></div>
+            <p id="contenido-articulo" class="contenido-articulo">Contenido del artículo</p>
+        </article>
 
         <section class="seccion-contacto" id="Contacto" aria-labelledby="titulo-contacto">
             <div class="encabezado-contacto">
@@ -76,5 +85,7 @@
     <footer class="pie-sitio">
         <p>© 2026 Gmoon Gamer Store · Tu próxima partida empieza aquí.</p>
     </footer>
+    <script src="../JS/articulos.js"></script>
+    <script src="../JS/menu.js"></script>
 </body>
 </html>
