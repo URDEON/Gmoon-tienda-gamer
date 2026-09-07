@@ -91,6 +91,35 @@
 	object-position: center;
 }
 
+.visual-producto.silla-gamer {
+	position: relative;
+	overflow: hidden;
+	padding: 8px 22px 0;
+	align-items: end;
+}
+
+.visual-producto.silla-gamer img {
+	position: absolute;
+	inset: 8px 22px 0;
+	width: calc(100% - 44px);
+	height: calc(100% - 8px);
+	object-position: center bottom;
+}
+
+.visual-producto.mouse-gamer {
+	position: relative;
+	overflow: hidden;
+	padding: 16px;
+}
+
+.visual-producto.mouse-gamer img {
+	width: 72%;
+	height: 72%;
+	margin: auto;
+	object-fit: contain;
+	object-position: center;
+}
+
 .contenido-producto {
 	display: flex;
 	flex: 1;
