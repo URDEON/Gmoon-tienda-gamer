@@ -1,0 +1,152 @@
+/* Página de carrito */
+.seccion-carrito {
+	width: min(1000px, calc(100% - 64px));
+	margin: 56px auto 88px;
+}
+
+.encabezado-carrito {
+	margin-bottom: 28px;
+}
+
+.encabezado-carrito h1 {
+	margin: 8px 0 0;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 52px;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.lista-carrito {
+	display: grid;
+	gap: 16px;
+}
+
+.item-carrito {
+	display: grid;
+	grid-template-columns: 120px minmax(160px, 1fr) auto auto;
+	align-items: center;
+	gap: 20px;
+	padding: 18px;
+	border: 1px solid #30234d;
+	background: #11131d;
+}
+
+.item-carrito > img {
+	width: 120px;
+	height: 100px;
+	object-fit: contain;
+	background: #0b0c17;
+}
+
+.datos-item-carrito p {
+	margin: 0 0 8px;
+	color: var(--pink);
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.datos-item-carrito h2 {
+	margin: 0 0 10px;
+	font-size: 18px;
+}
+
+.datos-item-carrito strong {
+	color: var(--cyan);
+	font-size: 20px;
+}
+
+.controles-carrito {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.controles-carrito button,
+.boton-eliminar-carrito {
+	border: 1px solid var(--cyan);
+	color: var(--white);
+	background: transparent;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.controles-carrito button {
+	width: 32px;
+	height: 32px;
+	font-size: 20px;
+}
+
+.controles-carrito button:hover,
+.boton-eliminar-carrito:hover {
+	color: var(--charcoal);
+	background: var(--cyan);
+}
+
+.boton-eliminar-carrito {
+	padding: 8px 10px;
+	border-color: #f04dd5;
+	color: #f04dd5;
+	font-size: 12px;
+}
+
+.resumen-carrito {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	margin-top: 24px;
+	padding: 22px;
+	border-top: 1px solid var(--cyan);
+	background: #17132a;
+}
+
+.resumen-carrito strong {
+	color: var(--cyan);
+	font-size: 26px;
+}
+
+#carrito-vacio {
+	padding: 32px;
+	border: 1px dashed #3c2c6e;
+	color: #c9c9d8;
+	text-align: center;
+}
+
+@media (max-width: 700px) {
+	.seccion-carrito {
+		width: min(100% - 32px, 620px);
+		margin: 40px auto 68px;
+	}
+
+	.item-carrito {
+		grid-template-columns: 90px 1fr;
+	}
+
+	.item-carrito > img {
+		width: 90px;
+		height: 90px;
+	}
+
+	.controles-carrito,
+	.boton-eliminar-carrito {
+		grid-column: 2;
+		justify-self: start;
+	}
+
+	.resumen-carrito {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 480px) {
+	.seccion-carrito {
+		width: min(100% - 24px, 620px);
+	}
+
+	.encabezado-carrito h1 {
+		font-size: 42px;
+	}
+}

@@ -4,8 +4,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/carrito.css">
 	<link rel="stylesheet" href="../CSS/inicio.css">
-	<title>Gmoon | Carrito</title>
+	<title>Carrito | Gmoon</title>
 </head>
 <body>
 	<header class="encabezado-sitio">
@@ -17,7 +18,7 @@
             <button class="boton-categorias" type="button" aria-controls="menu-categorias" aria-expanded="false" aria-label="Abrir categorías"><span class="icono-menu"><i></i><i></i><i></i></span><span>Categorías</span></button>
             <form class="formulario-busqueda" role="search"><input type="search" placeholder="Busca aquí la tecnología para ti" aria-label="Buscar productos"><button type="submit" aria-label="Buscar">⌕</button></form>
             <a class="enlace-cuenta" href="iniciar_sesion.html">Hola, ingresa aquí!</a>
-            <div class="acciones-compras"><a class="enlace-compras" href="mis_compras.html">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a></div>
+            <div class="acciones-compras"><a class="enlace-compras" href="carrito.html" aria-label="Ver mis compras y carrito">Mis compras <span aria-hidden="true">🛒</span></a></div>
         </div>
         <div class="menu-categorias" id="menu-categorias" aria-label="Categorías de productos">
             <a class="todas-categorias" href="index.html#Productos">Todas las categorías <span>›</span></a>
@@ -29,8 +30,18 @@
         <div class="barra-promocion">Únicos con compra online y retiro <strong>inmediato</strong> en tienda Gmoon en todo Chile.</div>
     </header>
     <main>
-        <!-- INICIO DEL MAIN: aquí comienza el contenido asignado de esta página. -->
-        <P>INICIO DEL MAIN: aquí comienza el contenido asignado de est página</P>
+        <section class="seccion-carrito" aria-labelledby="titulo-carrito">
+            <div class="encabezado-carrito">
+                <p class="etiqueta-seccion">TU COMPRA</p>
+                <h1 id="titulo-carrito">Carrito de compras</h1>
+            </div>
+            <p id="carrito-vacio">Tu carrito está vacío.</p>
+            <div id="lista-carrito" class="lista-carrito"></div>
+            <div class="resumen-carrito">
+                <span>Total de la compra</span>
+                <strong id="total-carrito">$0</strong>
+            </div>
+        </section>
 
         <section class="seccion-contacto" id="Contacto" aria-labelledby="titulo-contacto">
             <div class="encabezado-contacto">
@@ -76,5 +87,7 @@
     <footer class="pie-sitio">
         <p>© 2026 Gmoon Gamer Store · Tu próxima partida empieza aquí.</p>
     </footer>
+    <script src="../JS/carrito.js"></script>
+    <script src="../JS/menu.js"></script>
 </body>
 </html>

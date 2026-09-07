@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="../CSS/detalle-producto.css">
-	<link rel="stylesheet" href="../CSS/inicio.css">
+    <link rel="stylesheet" href="../CSS/inicio.css">
 	<title>Gmoon | Detalle de producto</title>
 </head>
 <body>
@@ -18,7 +18,7 @@
             <button class="boton-categorias" type="button" aria-controls="menu-categorias" aria-expanded="false" aria-label="Abrir categorías"><span class="icono-menu"><i></i><i></i><i></i></span><span>Categorías</span></button>
             <form class="formulario-busqueda" role="search"><input type="search" placeholder="Busca aquí la tecnología para ti" aria-label="Buscar productos"><button type="submit" aria-label="Buscar">⌕</button></form>
             <a class="enlace-cuenta" href="iniciar_sesion.html">Hola, ingresa aquí!</a>
-            <div class="acciones-compras"><a class="enlace-compras" href="mis_compras.html">Mis compras</a><a class="enlace-carrito" href="#" aria-label="Ver carrito">🛒</a></div>
+            <div class="acciones-compras"><a class="enlace-compras" href="carrito.html" aria-label="Ver mis compras y carrito">Mis compras <span aria-hidden="true">🛒</span></a></div>
         </div>
         <div class="menu-categorias" id="menu-categorias" aria-label="Categorías de productos">
             <a class="todas-categorias" href="index.html#Productos">Todas las categorías <span>›</span></a>
@@ -40,7 +40,7 @@
                 <h1 id="nombre-producto">Nombre del producto</h1>
                 <p id="descripcion-producto">Descripción del producto</p>
                 <strong id="precio-producto">$0</strong>
-                <button class="boton-anadir-carrito" type="button">Añadir al carrito</button>
+                <button id="boton-anadir-carrito" class="boton-anadir-carrito" type="button">Añadir al carrito</button>
             </div>
         </section>
 
@@ -88,6 +88,7 @@
     <footer class="pie-sitio">
         <p>© 2026 Gmoon Gamer Store · Tu próxima partida empieza aquí.</p>
     </footer>
+    <script src="../JS/carrito.js"></script>
     <script src="../JS/detalle-producto.js"></script>
 	<script src="../JS/menu.js"></script>
 </body>
