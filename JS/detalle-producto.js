@@ -144,4 +144,35 @@ const productos = {
 		precio: '$159.990',
 		imagen: '../img/Accesorios/Silla gaming GTPLAYER negra y azul.png'
 	}
+};
+
+const parametros = new URLSearchParams(window.location.search);
+const idProducto = parametros.get('id');
+const producto = productos[idProducto];
+
+const categoriaProducto = document.querySelector('#categoria-producto');
+const nombreProducto = document.querySelector('#nombre-producto');
+const descripcionProducto = document.querySelector('#descripcion-producto');
+const precioProducto = document.querySelector('#precio-producto');
+const imagenProducto = document.querySelector('#imagen-producto');
+const botonAnadirCarrito = document.querySelector('#boton-anadir-carrito');
+
+if (producto) {
+	categoriaProducto.textContent = producto.categoria;
+	nombreProducto.textContent = producto.nombre;
+	descripcionProducto.textContent = producto.descripcion;
+	precioProducto.textContent = producto.precio;
+	imagenProducto.src = producto.imagen;
+	imagenProducto.alt = producto.nombre;
+	botonAnadirCarrito.addEventListener('click', () => {
+		window.agregarAlCarrito({ id: idProducto, ...producto });
+		botonAnadirCarrito.textContent = 'Añadido al carrito';
+	});
+} else {
+	categoriaProducto.textContent = 'Detalle de producto';
+	nombreProducto.textContent = 'Selecciona un producto';
+	descripcionProducto.textContent = 'Cuando agreguemos el catálogo, cada producto tendrá aquí su información completa.';
+	precioProducto.textContent = '';
+	imagenProducto.removeAttribute('src');
+	botonAnadirCarrito.disabled = true;
 }
