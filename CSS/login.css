@@ -1,0 +1,143 @@
+/* ============================================
+   Página: Iniciar sesión / Registro
+   ============================================ */
+
+.seccion-login {
+	padding: 60px 24px;
+	display: flex;
+	justify-content: center;
+}
+
+/* Tarjeta grande que contiene las 2 columnas */
+.tarjeta-login {
+	display: flex;
+	flex-wrap: wrap;
+	max-width: 1000px;
+	width: 100%;
+	border: 1px solid var(--cyan);
+	background-color: var(--slate);
+}
+
+/* Columna izquierda: formulario */
+.panel-formulario {
+	flex: 1 1 380px;
+	padding: 40px;
+}
+
+.panel-formulario h1 {
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 36px;
+	text-transform: uppercase;
+	margin: 8px 0;
+}
+
+.panel-formulario p {
+	color: #c9c9d8;
+}
+
+/* Formulario (aplica tanto a login como a registro) */
+#formulario-login label,
+#formulario-registro label {
+	display: block;
+	margin-top: 16px;
+	margin-bottom: 6px;
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+#formulario-login input,
+#formulario-registro input {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #333;
+	background-color: #12131c;
+	color: var(--white);
+	font-size: 15px;
+}
+
+#boton-mostrar-contrasena,
+#boton-mostrar-contrasena-registro {
+	margin-top: 8px;
+	border: none;
+	background: none;
+	color: var(--cyan);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.mensaje-error {
+	color: var(--pink);
+	font-size: 13px;
+	margin: 4px 0 0;
+}
+
+.boton-enviar-login {
+	width: 100%;
+	margin-top: 16px;
+	padding: 14px;
+	border: none;
+	background-color: var(--cyan);
+	color: var(--charcoal);
+	font-size: 15px;
+	font-weight: 700;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+#mensaje-estado-login,
+#mensaje-estado-registro {
+	margin-top: 12px;
+	font-size: 14px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.texto-separador {
+	text-align: center;
+	margin-top: 24px;
+}
+
+.acciones-sociales {
+	display: flex;
+	gap: 12px;
+}
+
+.boton-social {
+	flex: 1;
+	padding: 12px;
+	border: 1px solid #333;
+	background-color: #12131c;
+	color: var(--white);
+	cursor: pointer;
+}
+
+.texto-registro {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.texto-registro a {
+	color: var(--pink);
+	font-weight: 700;
+}
+
+/* Columna derecha: imagen */
+.panel-visual {
+	flex: 1 1 380px;
+}
+
+.panel-visual img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+/* En pantallas chicas, la imagen se apila abajo */
+@media (max-width: 800px) {
+	.panel-visual {
+		order: -1;
+		height: 200px;
+	}
+}
