@@ -143,6 +143,13 @@ const productos = {
 		descripcion: 'Silla ergonómica GTPLAYER, pensada para largas jornadas de juego con máximo confort.',
 		precio: '$159.990',
 		imagen: '../img/Accesorios/Silla gaming GTPLAYER negra y azul.png'
+	},
+	'nintendo-64': {
+		categoria: 'Consolas Retro',
+		nombre: 'Nintendo 64',
+		descripcion: 'Consola retro de la marca Nintendo, ideal para coleccionistas y amantes del gaming clásico.',
+		precio: '$199.990',
+		imagen: 'https://i.ebayimg.com/images/g/4lgAAOSwLnNjJjPz/s-l1200.jpg'
 	}
 };
 

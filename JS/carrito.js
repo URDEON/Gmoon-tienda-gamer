@@ -1,4 +1,18 @@
 const CLAVE_CARRITO = 'gmoon-carrito';
+const PORCENTAJE_DESCUENTO = 0.2;
+const CANTIDAD_MINIMA_PRODUCTO = 3;
+
+function calcularDescuento(cantidad) {
+	if (cantidad >= CANTIDAD_MINIMA_PRODUCTO) {
+		return PORCENTAJE_DESCUENTO;
+	}
+	return 0;
+	const cantidadEnCategoria = carrito.filter(item => item.categoria === producto.categoria).length;
+	const aplicarDescuento = cantidadEnCategoria >= CANTIDAD_MINIMA_PRODUCTO;
+}
+
+
+
 
 function obtenerCarrito() {
 	return JSON.parse(localStorage.getItem(CLAVE_CARRITO) || '[]');

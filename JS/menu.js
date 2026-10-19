@@ -1,4 +1,4 @@
-
+// Funcionalidad del menú de categorías
 const botonCategorias = document.querySelector('.boton-categorias');
 const menuCategorias = document.querySelector('.menu-categorias');
 
@@ -15,7 +15,7 @@ document.addEventListener('click', (event) => {
 });
 
 
-
+// Funciones para manejar usuarios y sesión en localStorage
 
 function obtenerUsuarios() {
 	const datos = localStorage.getItem('gmoonUsuarios');

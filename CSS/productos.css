@@ -20,6 +20,10 @@
 	text-transform: uppercase;
 }
 
+.contenido-producto h3{
+	color: chartreuse
+}
+
 .texto-catalogo {
 	max-width: 560px;
 	margin: 0;
