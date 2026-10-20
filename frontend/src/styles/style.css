@@ -419,23 +419,38 @@ a {
 		margin-left: auto;
 		padding-right: 12px;
 	}
+}
+/* Cuenta: en escritorio se ve el texto; en celular y tablet, solo el ícono en la fila principal */
+.icono-cuenta {
+	display: none;
+}
+
+@media (max-width: 850px) {
+	.contenido-barra-principal {
+		padding: 12px 0 16px;
+	}
 
 	.enlace-cuenta {
-		position: absolute;
-		top: 8px;
-		right: 0;
-		max-width: 150px;
-		overflow: hidden;
-		padding: 7px 8px;
-		font-size: 11px;
-		text-overflow: ellipsis;
+		position: static;
+		max-width: none;
+		padding: 10px;
+		font-size: 13px;
+		line-height: 1;
 	}
 
-	.formulario-busqueda {
-		min-height: 44px;
+	.enlace-cuenta .texto-cuenta {
+		display: none;
 	}
 
-	.barra-promocion {
-		font-size: 15px;
+	.enlace-cuenta .icono-cuenta {
+		display: block;
+	}
+
+	.boton-categorias {
+		margin-left: auto;
+	}
+
+	.acciones-compras {
+		margin-left: 0;
 	}
 }

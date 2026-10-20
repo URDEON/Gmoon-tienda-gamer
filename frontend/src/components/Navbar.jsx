@@ -53,7 +53,10 @@ function Navbar() {
             <button type="submit" aria-label="Buscar">⌕</button>
           </form>
 
-          <Link className="enlace-cuenta" to="/iniciar-sesion">Hola, ingresa aquí!</Link>
+          <Link className="enlace-cuenta" to="/iniciar-sesion" aria-label="Iniciar sesión">
+            <span className="icono-cuenta" aria-hidden="true">👤</span>
+            <span className="texto-cuenta">Hola, ingresa aquí!</span>
+          </Link>
           <div className="acciones-compras">
             <Link className="enlace-compras" to="/mis-compras">Mis compras</Link>
             <Link className="enlace-carrito" to="/carrito" aria-label="Ver carrito">🛒</Link>
