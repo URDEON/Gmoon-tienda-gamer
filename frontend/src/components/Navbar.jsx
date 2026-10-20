@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { useCart } from '../context/CartContext'
 
 function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false)
   const botonRef = useRef(null)
   const menuRef = useRef(null)
+  const { totalProductos } = useCart()
 
   // Cierra el menú al hacer clic fuera (reemplaza a menu.js)
   useEffect(() => {
@@ -59,7 +61,10 @@ function Navbar() {
           </Link>
           <div className="acciones-compras">
             <Link className="enlace-compras" to="/mis-compras">Mis compras</Link>
-            <Link className="enlace-carrito" to="/carrito" aria-label="Ver carrito">🛒</Link>
+            <Link className="enlace-carrito" to="/carrito" aria-label={`Ver carrito, ${totalProductos} productos`}>
+              🛒
+              {totalProductos > 0 && <span className="contador-carrito">{totalProductos}</span>}
+            </Link>
           </div>
         </div>
 

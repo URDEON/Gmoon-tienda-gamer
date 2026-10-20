@@ -454,3 +454,23 @@ a {
 		margin-left: 0;
 	}
 }
+/* Contador de productos sobre el ícono del carrito */
+.enlace-carrito {
+	position: relative;
+}
+
+.contador-carrito {
+	position: absolute;
+	top: -8px;
+	right: -10px;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	border-radius: 9px;
+	color: var(--charcoal);
+	background: var(--cyan);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 18px;
+	text-align: center;
+}
