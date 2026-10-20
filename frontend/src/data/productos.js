@@ -20,9 +20,9 @@ export const productos = [
   { id: 'nintendo-64', grupo: 'Consolas Retro', categoria: 'Consolas Retro', nombre: 'Nintendo 64', descripcion: 'Consola retro de la marca Nintendo, ideal para coleccionistas y amantes del gaming clásico.', precio: 199990, imagen: 'https://i.ebayimg.com/images/g/4lgAAOSwLnNjJjPz/s-l1200.jpg' },
 
   // --- PC Gamer ---
-  { id: 'pc-gamer-starter', grupo: 'PC Gamer', categoria: 'PC Gamer', nombre: 'PC Gamer Gmoon Starter', descripcion: 'PC completo para jugar los mejores juegos con gran rendimiento.', precio: 699990, imagen: '/img/PC/Pc_Gamer_starter_699.png' },
-  { id: 'pc-gamer-pro-rgb', grupo: 'PC Gamer', categoria: 'PC Gamer Pro', nombre: 'PC Gamer Pro Gmoon RGB', descripcion: 'PC gamer de alto rendimiento con iluminación RGB, ideal para exigir al máximo.', precio: 999990, imagen: '/img/PC/RGB de alta gama.png' },
-  { id: 'pc-gamer-gmoon-ultra', grupo: 'PC Gamer', categoria: 'PC Gamer Ultra', nombre: 'PC Gamer Gmoon Ultra', descripcion: 'El equipo tope de gama de Gmoon, para la experiencia gamer más exigente.', precio: 1399990, imagen: '/img/PC/PC gaming blanco con RGB.png' },
+  { id: 'pc-gamer-starter', grupo: 'PC Gamer', categoria: 'PC Gamer', nombre: 'PC Gamer Gmoon Starter', descripcion: 'PC completo para jugar los mejores juegos con gran rendimiento.', precio: 699990, imagen: '/img/PC/Pc_Gamer_starter_699.png', imagenInicio: '/img/PC/portada_pc_699.png' },
+  { id: 'pc-gamer-pro-rgb', grupo: 'PC Gamer', categoria: 'PC Gamer Pro', nombre: 'PC Gamer Pro Gmoon RGB', descripcion: 'PC gamer de alto rendimiento con iluminación RGB, ideal para exigir al máximo.', precio: 999990, imagen: '/img/PC/RGB de alta gama.png', imagenInicio: '/img/PC/portada_pc_999.png' },
+  { id: 'pc-gamer-gmoon-ultra', grupo: 'PC Gamer', categoria: 'PC Gamer Ultra', nombre: 'PC Gamer Gmoon Ultra', descripcion: 'El equipo tope de gama de Gmoon, para la experiencia gamer más exigente.', precio: 1399990, imagen: '/img/PC/PC gaming blanco con RGB.png', imagenInicio: '/img/PC/portada_pc_1.399.png' },
 
   // --- Periféricos ---
   { id: 'audifonos-gamer-pro', grupo: 'Periféricos', categoria: 'Periféricos', nombre: 'Audífonos Gamer Pro', descripcion: 'Audífonos inalámbricos pensados para largas sesiones de juego.', precio: 69990, imagen: '/img/Accesorios/Audifonos_inalambricos.png' },
