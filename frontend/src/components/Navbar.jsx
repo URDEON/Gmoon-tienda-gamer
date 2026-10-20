@@ -75,8 +75,11 @@ function Navbar() {
           aria-label="Categorías de productos"
         >
           <Link className="todas-categorias" to="/productos">Todas las categorías <span>›</span></Link>
-          <Link to="/productos">Explora la Tienda<span>›</span></Link>
-          <Link to="/productos">Computadores gamer <span>›</span></Link>
+          <Link to="/productos#videojuegos">Videojuegos <span>›</span></Link>
+          <Link to="/productos#consolas-modernas">Consolas modernas <span>›</span></Link>
+          <Link to="/productos#consolas-retro">Consolas retro <span>›</span></Link>
+          <Link to="/productos#Pc%20Gamer">PC Gamer de escritorio <span>›</span></Link>
+          <Link to="/productos#accesorios">Accesorios gamer <span>›</span></Link>
           <a href="/#Nosotros">Nosotros <span>›</span></a>
           <a href="/#Blog">Blog gamer <span>›</span></a>
           <a href="/#Contacto">Contacto <span>›</span></a>

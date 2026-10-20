@@ -31,8 +31,14 @@ export const productos = [
   { id: 'silla-gaming-gtplayer', grupo: 'Periféricos', categoria: 'Periféricos', nombre: 'Silla gamer ergonómica', descripcion: 'Silla ergonómica GTPLAYER, pensada para largas jornadas de juego con máximo confort.', precio: 159990, imagen: '/img/Accesorios/Silla gaming GTPLAYER negra y azul.png' },
 ]
 
-// Orden en que se muestran los grupos en el catálogo
-export const grupos = ['Videojuegos', 'Consolas Modernas', 'Consolas Retro', 'PC Gamer', 'Periféricos']
+// Orden, títulos e identificadores de las secciones del catálogo
+export const grupos = [
+  { nombre: 'Videojuegos', id: 'videojuegos' },
+  { nombre: 'Consolas Modernas', id: 'consolas-modernas' },
+  { nombre: 'Consolas Retro', id: 'consolas-retro' },
+  { nombre: 'PC Gamer', titulo: 'PC Gamer de Escritorio', id: 'Pc Gamer' },
+  { nombre: 'Periféricos', titulo: 'Accesorios gamer', id: 'accesorios' },
+]
 
 // 89990 -> "$89.990"
 export const formatearPrecio = (valor) => `$${valor.toLocaleString('es-CL')}`

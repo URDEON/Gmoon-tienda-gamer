@@ -15,18 +15,13 @@ function Productos() {
         </p>
       </div>
 
-      {grupos.map((grupo) => (
-        <section key={grupo} className="grupo-categoria">
-          <h2 className="titulo-categoria">{grupo}</h2>
-          {/* Bootstrap: 1 columna en móvil, 2 en tablet, 3 en laptop, 4 en pantalla grande */}
-          <div className="row g-4">
+      {grupos.map(({ nombre, titulo, id }) => (
+        <section key={id} id={id} className="grupo-categoria">
+          <h2 className="titulo-categoria">{titulo || nombre}</h2>
+          <div className="rejilla-productos">
             {productos
-              .filter((producto) => producto.grupo === grupo)
-              .map((producto) => (
-                <div key={producto.id} className="col-12 col-sm-6 col-lg-4 col-xl-3">
-                  <ProductCard producto={producto} />
-                </div>
-              ))}
+              .filter((producto) => producto.grupo === nombre)
+              .map((producto) => <ProductCard key={producto.id} producto={producto} />)}
           </div>
         </section>
       ))}
