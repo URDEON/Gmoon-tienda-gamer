@@ -3,14 +3,17 @@
 	position: relative;
 	display: flex;
 	align-items: center;
-	min-height: 620px;
+	min-height: clamp(420px, 70vh, 620px);
 	margin: 0;
-	padding: 72px max(32px, calc((100% - 1200px) / 2));
+	padding: clamp(32px, 6vw, 72px) max(20px, calc((100% - 1200px) / 2));
 	overflow: hidden;
 	background-image: linear-gradient(90deg, rgb(3 3 12 / 88%) 0%, rgb(3 3 12 / 58%) 42%, rgb(3 3 12 / 25%) 100%), url('/img/Portada_inicio.png');
 	background-position: center;
 	background-size: cover;
+	background-repeat: no-repeat;
 }
+
+
 
 .contenido-bienvenida h1 {
 	position: relative;
@@ -644,10 +647,10 @@
 
 @media (max-width: 850px) {
 	.seccion-bienvenida {
-		min-height: 560px;
+		min-height: clamp(420px, 70vh, 560px);
 		padding: 56px 32px;
-		background-position: 62% center;
-		background-image: linear-gradient(90deg, rgb(3 3 12 / 90%) 0%, rgb(3 3 12 / 65%) 58%, rgb(3 3 12 / 30%) 100%), url('/img/Portada_inicio.png');
+		background-position: center;
+		background-image: linear-gradient(180deg, rgb(3 3 12 / 40%) 0%, rgb(3 3 12 / 80%) 55%, rgb(3 3 12 / 90%) 100%), url('/img/Portada_inicio_movil.png');
 	}
 
 	.contenido-bienvenida h1 {
@@ -709,9 +712,10 @@
 
 @media (max-width: 480px) {
 	.seccion-bienvenida {
-		min-height: 520px;
-		padding: 48px 20px;
-		background-position: 64% center;
+		min-height: clamp(420px, 70vh, 560px);
+		padding: 56px 32px;
+		background-position: center;
+		background-image: linear-gradient(180deg, rgb(3 3 12 / 40%) 0%, rgb(3 3 12 / 80%) 55%, rgb(3 3 12 / 90%) 100%), url('/img/Portada_inicio_movil.png');
 	}
 
 	.contenido-bienvenida h1 {
