@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 
 function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false)
   const botonRef = useRef(null)
   const menuRef = useRef(null)
   const { totalProductos } = useCart()
+  const { usuario, esAdmin, cerrarSesion } = useAuth()
 
   // Cierra el menú al hacer clic fuera (reemplaza a menu.js)
   useEffect(() => {
@@ -55,10 +57,31 @@ function Navbar() {
             <button type="submit" aria-label="Buscar">⌕</button>
           </form>
 
-          <Link className="enlace-cuenta" to="/iniciar-sesion" aria-label="Iniciar sesión">
-            <span className="icono-cuenta" aria-hidden="true">👤</span>
-            <span className="texto-cuenta">Hola, ingresa aquí!</span>
+          <Link
+            className="enlace-cuenta"
+            to={usuario ? (esAdmin ? '/admin' : '/') : '/iniciar-sesion'}
+            aria-label={usuario ? 'Mi cuenta' : 'Iniciar sesión'}
+          >
+            <svg
+              className="icono-cuenta"
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+            </svg>
+            <span className="texto-cuenta">
+              {usuario ? `Hola, ${usuario.nombre.split(' ')[0]}` : 'Hola, ingresa aquí!'}
+            </span>
           </Link>
+
           <div className="acciones-compras">
             <Link className="enlace-compras" to="/mis-compras">Mis compras</Link>
             <Link className="enlace-carrito" to="/carrito" aria-label={`Ver carrito, ${totalProductos} productos`}>
@@ -75,14 +98,13 @@ function Navbar() {
           aria-label="Categorías de productos"
         >
           <Link className="todas-categorias" to="/productos">Todas las categorías <span>›</span></Link>
-          <Link to="/productos#videojuegos">Videojuegos <span>›</span></Link>
-          <Link to="/productos#consolas-modernas">Consolas modernas <span>›</span></Link>
-          <Link to="/productos#consolas-retro">Consolas retro <span>›</span></Link>
-          <Link to="/productos#Pc%20Gamer">PC Gamer de escritorio <span>›</span></Link>
-          <Link to="/productos#accesorios">Accesorios gamer <span>›</span></Link>
+          <Link to="/productos">Explora la Tienda<span>›</span></Link>
+          <Link to="/productos">Computadores gamer <span>›</span></Link>
           <a href="/#Nosotros">Nosotros <span>›</span></a>
           <a href="/#Blog">Blog gamer <span>›</span></a>
           <a href="/#Contacto">Contacto <span>›</span></a>
+          {esAdmin && <Link to="/admin">Panel de administración <span>›</span></Link>}
+          {usuario && <Link to="/" onClick={cerrarSesion}>Cerrar sesión <span>›</span></Link>}
         </div>
 
         <nav className="menu-movil ancho-encabezado" id="menu" aria-label="Navegación principal">
