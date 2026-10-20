@@ -5,14 +5,17 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/style.css'
 import './styles/inicio.css'
 import App from './App.jsx'
+import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <CartProvider>
-        <App />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 )
