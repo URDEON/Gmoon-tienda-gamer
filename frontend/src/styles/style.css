@@ -151,6 +151,53 @@ a {
 	margin-left: auto;
 }
 
+.boton-accion-sesion {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-height: 42px;
+	padding: 9px 14px;
+	border: 1px solid var(--violet);
+	border-radius: 6px;
+	color: var(--white);
+	background: linear-gradient(135deg, rgb(168 92 255 / 16%), rgb(17 19 29 / 90%));
+	font: inherit;
+	font-size: 13px;
+	font-weight: 700;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.boton-accion-sesion svg {
+	width: 17px;
+	height: 17px;
+	fill: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.8;
+}
+
+.boton-accion-sesion:hover,
+.boton-accion-sesion:focus-visible {
+	transform: translateY(-1px);
+	border-color: var(--pink);
+	background: linear-gradient(135deg, rgb(240 77 213 / 24%), rgb(17 19 29 / 90%));
+}
+
+.boton-registro {
+	border-color: var(--cyan);
+	background: linear-gradient(135deg, rgb(0 229 255 / 16%), rgb(17 19 29 / 90%));
+}
+
+.boton-registro:hover,
+.boton-registro:focus-visible {
+	border-color: var(--cyan);
+	background: linear-gradient(135deg, rgb(0 229 255 / 30%), rgb(17 19 29 / 90%));
+}
+
 /* Buscador */
 .formulario-busqueda {
 	display: flex;
@@ -231,8 +278,7 @@ a {
 	}
 
 	.enlace-cuenta,
-	.boton-iniciar-sesion,
-	.enlace-compras {
+	.boton-accion-sesion {
 		padding: 8px;
 		font-size: 12px;
 	}
@@ -365,11 +411,6 @@ a {
 		height: 64px;
 	}
 
-	.enlace-compras,
-	.boton-iniciar-sesion {
-		display: none;
-	}
-
 	.enlace-cuenta {
 		position: absolute;
 		top: 8px;
@@ -452,6 +493,11 @@ a {
 
 	.acciones-compras {
 		margin-left: 0;
+	}
+
+	.boton-accion-sesion {
+		min-height: 38px;
+		padding: 8px 10px;
 	}
 }
 /* Contador de productos sobre el ícono del carrito */
