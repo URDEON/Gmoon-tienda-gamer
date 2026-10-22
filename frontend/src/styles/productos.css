@@ -31,6 +31,15 @@
 	line-height: 1.6;
 }
 
+.mensaje-sin-resultados {
+	margin: 40px 0;
+	padding: 24px;
+	border: 1px solid #30234d;
+	color: #c9c9d8;
+	background: #11131d;
+	line-height: 1.6;
+}
+
 .grupo-categoria {
 	margin-top: 48px;
 }
@@ -76,6 +85,7 @@
 }
 
 .visual-producto {
+	position: relative;
 	display: grid;
 	place-items: center;
 	aspect-ratio: 1 / 1;
@@ -93,6 +103,26 @@
 	height: 100%;
 	object-fit: contain;
 	object-position: center;
+}
+
+.etiqueta-oferta {
+	display: inline-flex;
+	align-items: center;
+	width: fit-content;
+	padding: 6px 10px;
+	border: 1px solid var(--pink);
+	border-radius: 999px;
+	color: var(--white);
+	background: #401a45;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.visual-producto > .etiqueta-oferta {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	z-index: 1;
 }
 
 .visual-producto.silla-gamer {
@@ -147,10 +177,26 @@
 }
 
 .precio-producto {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 8px;
 	margin: auto 0 18px;
 	color: var(--cyan);
 	font-size: 22px;
 	font-weight: 700;
+}
+
+.precio-producto del {
+	color: #a5a5b8;
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.seccion-ofertas .encabezado-catalogo {
+	padding: 22px;
+	border: 1px solid rgb(240 77 213 / 35%);
+	background: linear-gradient(120deg, rgb(240 77 213 / 10%), #11131d);
 }
 
 .boton-producto {
