@@ -1,0 +1,143 @@
+.pagina-blog {
+	width: min(1200px, calc(100% - 64px));
+	margin: 56px auto 88px;
+}
+
+.pagina-blog .encabezado-blog > p {
+	max-width: 420px;
+	margin: 0;
+	color: #c9c9d8;
+	line-height: 1.6;
+}
+
+.pagina-blog .encabezado-blog h1 {
+	margin: 8px 0 0;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 52px;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.pagina-blog .tarjeta-blog {
+	grid-template-columns: minmax(200px, .9fr) 1.1fr;
+}
+
+.pagina-blog .visual-blog {
+	min-height: 260px;
+}
+
+.pagina-blog .contenido-blog h2 {
+	margin: 0 0 10px;
+	font-size: 20px;
+}
+
+.detalle-articulo {
+	width: min(1000px, calc(100% - 64px));
+	margin: 56px auto 88px;
+}
+
+.boton-volver-blog {
+	display: inline-block;
+	margin-bottom: 24px;
+	color: var(--cyan);
+	font-weight: 700;
+}
+
+.boton-volver-blog:hover {
+	color: var(--white);
+}
+
+.encabezado-articulo {
+	max-width: 760px;
+	margin-bottom: 30px;
+}
+
+.encabezado-articulo h1,
+.detalle-articulo > h1 {
+	margin: 10px 0 18px;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: clamp(42px, 6vw, 72px);
+	line-height: .95;
+	text-transform: uppercase;
+}
+
+.resumen-articulo {
+	margin: 0;
+	color: #c9c9d8;
+	font-size: 18px;
+	line-height: 1.7;
+}
+
+.visual-articulo {
+	display: grid;
+	min-height: 360px;
+	place-items: center;
+	overflow: hidden;
+	border: 1px solid #30234d;
+	background: #11131d;
+}
+
+.visual-articulo img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-height: 520px;
+	object-fit: contain;
+}
+
+.contenido-articulo {
+	max-width: 760px;
+	margin: 32px auto 0;
+	color: #c9c9d8;
+	font-size: 17px;
+	line-height: 1.8;
+}
+
+@media (max-width: 850px) {
+	.pagina-blog {
+		width: min(100% - 32px, 620px);
+		margin: 40px auto 68px;
+	}
+
+	.pagina-blog .encabezado-blog {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.pagina-blog .rejilla-blog {
+		grid-template-columns: 1fr;
+	}
+
+	.detalle-articulo {
+		width: min(100% - 32px, 620px);
+		margin: 40px auto 68px;
+	}
+
+	.visual-articulo {
+		min-height: 260px;
+	}
+}
+
+@media (max-width: 600px) {
+	.pagina-blog,
+	.detalle-articulo {
+		width: min(100% - 24px, 620px);
+		margin: 28px auto 56px;
+	}
+
+	.pagina-blog .encabezado-blog h1 {
+		font-size: 42px;
+	}
+
+	.pagina-blog .tarjeta-blog {
+		grid-template-columns: 1fr;
+	}
+
+	.pagina-blog .visual-blog {
+		min-height: 200px;
+	}
+
+	.resumen-articulo {
+		font-size: 16px;
+	}
+}

@@ -8,7 +8,7 @@ const apartadosInicio = [
   { nombre: 'Explora la Tienda', id: 'Explora' },
   { nombre: 'Computadores gamer', id: 'Computadores' },
   { nombre: 'Nosotros', id: 'Nosotros' },
-  { nombre: 'Blog gamer', id: 'Blog' },
+  { nombre: 'Blog gamer', id: 'Blog', ruta: '/blog' },
   { nombre: 'Contacto', id: 'Contacto' },
 ]
 
@@ -167,8 +167,8 @@ function Navbar() {
           aria-label={estaEnInicio ? 'Apartados de inicio' : 'Categorías de productos'}
         >
           {estaEnInicio ? (
-            apartadosInicio.map(({ nombre, id }) => (
-              <Link key={id} to={`/#${id}`} onClick={() => setMenuAbierto(false)}>
+            apartadosInicio.map(({ nombre, id, ruta }) => (
+              <Link key={id} to={ruta || `/#${id}`} onClick={() => setMenuAbierto(false)}>
                 {nombre} <span>›</span>
               </Link>
             ))

@@ -149,6 +149,7 @@ function Inicio() {
             <p className="etiqueta-seccion">BLOG GMOON</p>
             <h2 id="titulo-blog">Ideas para mejorar tu partida</h2>
           </div>
+          <Link className="enlace-seccion" to="/blog">Ver todos los artículos <span aria-hidden="true">→</span></Link>
         </div>
         <div className="rejilla-blog">
           <article className="tarjeta-blog">
@@ -159,7 +160,7 @@ function Inicio() {
               <p>Guías gamer</p>
               <h3>Cómo elegir tu próxima consola</h3>
               <p>Comparamos opciones para que encuentres la consola que mejor se adapta a tu forma de jugar.</p>
-              <Link to="/productos">Ver catálogo <span aria-hidden="true">→</span></Link>
+              <Link to="/blog/guias-consolas">Leer artículo <span aria-hidden="true">→</span></Link>
             </div>
           </article>
           <article className="tarjeta-blog">
@@ -170,7 +171,7 @@ function Inicio() {
               <p>Setup gamer</p>
               <h3>Arma un espacio cómodo para jugar</h3>
               <p>Consejos simples para ordenar tus periféricos y disfrutar sesiones más cómodas.</p>
-              <Link to="/productos">Ver catálogo <span aria-hidden="true">→</span></Link>
+              <Link to="/blog/setup-gamer">Leer artículo <span aria-hidden="true">→</span></Link>
             </div>
           </article>
         </div>
