@@ -80,6 +80,75 @@
 	font-size: 32px;
 }
 
+.contenido-detalle-producto > .etiqueta-oferta {
+	margin: 0 0 12px;
+}
+
+.contenido-detalle-producto > strong del {
+	margin-right: 8px;
+	color: #a5a5b8;
+	font-size: 20px;
+	font-weight: 400;
+}
+
+.selector-cantidad {
+	display: grid;
+	gap: 8px;
+	margin: 0 0 20px;
+	color: #c9c9d8;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.control-cantidad {
+	display: inline-flex;
+	align-items: center;
+	width: fit-content;
+	border: 1px solid #3c2c6e;
+	background: #0b0c17;
+}
+
+.control-cantidad button {
+	width: 42px;
+	height: 42px;
+	border: 0;
+	color: var(--cyan);
+	background: transparent;
+	font: inherit;
+	font-size: 22px;
+	cursor: pointer;
+}
+
+.control-cantidad button:hover:not(:disabled) {
+	color: var(--white);
+	background: rgb(0 229 255 / 12%);
+}
+
+.control-cantidad button:disabled {
+	color: #656575;
+	cursor: not-allowed;
+}
+
+.control-cantidad input {
+	width: 64px;
+	height: 42px;
+	border: 0;
+	border-right: 1px solid #3c2c6e;
+	border-left: 1px solid #3c2c6e;
+	border-radius: 0;
+	color: var(--white);
+	background: transparent;
+	font: inherit;
+	text-align: center;
+	appearance: textfield;
+}
+
+.control-cantidad input::-webkit-inner-spin-button,
+.control-cantidad input::-webkit-outer-spin-button {
+	margin: 0;
+	appearance: none;
+}
+
 .boton-anadir-carrito {
 	padding: 14px 22px;
 	border: 1px solid var(--cyan);

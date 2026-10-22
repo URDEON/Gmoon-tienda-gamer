@@ -48,6 +48,17 @@
 	font-weight: 700;
 }
 
+.acciones-bienvenida {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.boton-ofertas {
+	border-color: var(--pink);
+	background: linear-gradient(100deg, #7b238c, #c22a8d);
+}
+
 .seccion-computadores {
 	width: min(1200px, calc(100% - 64px));
 	margin: 0 auto;

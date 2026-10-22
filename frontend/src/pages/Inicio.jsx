@@ -4,6 +4,7 @@ import { productos, formatearPrecio } from '../data/productos'
 const categorias = [
   {
     nombre: 'Consolas modernas',
+    id: 'consolas-modernas',
     descripcion: 'Potencia para jugar hoy',
     imagen: '/img/StickerConsolas_Modernas.png',
     clase: 'tarjeta-categoria-consolas',
@@ -11,6 +12,7 @@ const categorias = [
   },
   {
     nombre: 'Consolas retro',
+    id: 'consolas-retro',
     descripcion: 'Clásicos que siguen vivos',
     imagen: '/img/StickerConsolas_Retro.png',
     clase: 'tarjeta-categoria-retro',
@@ -18,6 +20,7 @@ const categorias = [
   },
   {
     nombre: 'Videojuegos',
+    id: 'videojuegos',
     descripcion: 'Nuevas historias por descubrir',
     imagen: '/img/Stiker_Videojuegos.png',
     clase: 'tarjeta-categoria-juegos',
@@ -25,6 +28,7 @@ const categorias = [
   },
   {
     nombre: 'Periféricos',
+    id: 'accesorios',
     descripcion: 'Equipa tu zona de juego',
     imagen: '/img/StickerPereferico.png',
     clase: 'tarjeta-categoria-perifericos',
@@ -40,7 +44,10 @@ function Inicio() {
           <p className="etiqueta-seccion">GMOON GAMER STORE</p>
           <h1>Tu próxima partida empieza aquí</h1>
           <p>Encuentra juegos, accesorios y tecnología para llevar tu experiencia gamer al siguiente nivel.</p>
-          <Link to="/productos" className="boton-principal">Explora nuestros productos</Link>
+          <div className="acciones-bienvenida">
+            <Link to="/productos" className="boton-principal">Explora nuestros productos</Link>
+            <Link to="/ofertas" className="boton-principal boton-ofertas">Ver ofertas demo</Link>
+          </div>
         </div>
       </section>
 
@@ -57,7 +64,7 @@ function Inicio() {
             <Link
               key={categoria.nombre}
               className={`tarjeta-categoria ${categoria.clase}`}
-              to="/productos"
+              to={`/productos#${categoria.id}`}
             >
               <span className="icono-categoria" aria-hidden="true">{categoria.icono}</span>
               <span className="marcador-imagen">
@@ -79,7 +86,7 @@ function Inicio() {
             <p className="etiqueta-seccion">PARA TU SETUP</p>
             <h2 id="titulo-computadores">Computadores gamer</h2>
           </div>
-          <Link className="enlace-seccion" to="/productos">Ver todos los productos <span aria-hidden="true">→</span></Link>
+          <Link className="enlace-seccion" to="/productos#pc-gamer">Ver todos los productos <span aria-hidden="true">→</span></Link>
         </div>
         <div className="rejilla-computadores">
           {productos.filter((producto) => producto.grupo === 'PC Gamer').map((producto) => (

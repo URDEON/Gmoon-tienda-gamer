@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { formatearPrecio } from '../data/productos'
+import { formatearPrecio, obtenerOferta, obtenerPrecioFinal } from '../data/productos'
 import '../styles/carrito.css'
 
 function Carrito() {
-  const { carrito, cambiarCantidad, eliminarDelCarrito, totalPrecio } = useCart()
+  const { carrito, cambiarCantidad, eliminarDelCarrito, subtotal, totalDescuento, totalPrecio } = useCart()
 
   return (
     <section className="seccion-carrito" aria-labelledby="titulo-carrito">
@@ -25,7 +25,11 @@ function Carrito() {
               <div className="datos-item-carrito">
                 <p>{item.categoria}</p>
                 <h2>{item.nombre}</h2>
-                <strong>{formatearPrecio(item.precio)}</strong>
+                <strong>
+                  {obtenerOferta(item) && <del>{formatearPrecio(item.precio)} </del>}
+                  {formatearPrecio(obtenerPrecioFinal(item))}
+                  {obtenerOferta(item) && <small>Oferta demo aplicada</small>}
+                </strong>
               </div>
               <div className="controles-carrito">
                 <button type="button" onClick={() => cambiarCantidad(item.id, -1)} aria-label="Restar una unidad">−</button>
@@ -41,8 +45,16 @@ function Carrito() {
       )}
 
       <div className="resumen-carrito">
-        <span>Total de la compra</span>
-        <strong>{formatearPrecio(totalPrecio)}</strong>
+        <div className="totales-carrito">
+          <span>Subtotal <strong>{formatearPrecio(subtotal)}</strong></span>
+          {totalDescuento > 0 && (
+            <span className="ahorro-carrito">Descuentos demo <strong>-{formatearPrecio(totalDescuento)}</strong></span>
+          )}
+          <span>Total de la compra <strong>{formatearPrecio(totalPrecio)}</strong></span>
+        </div>
+        {carrito.length > 0 && (
+          <Link className="boton-continuar-pago" to="/checkout">Continuar al pago</Link>
+        )}
       </div>
     </section>
   )
