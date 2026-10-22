@@ -16,7 +16,7 @@ export const productos = [
   { id: 'nintendo-switch-2', grupo: 'Consolas Modernas', categoria: 'Consolas Modernas', nombre: 'Nintendo Switch 2', descripcion: 'Consola de nueva generación para disfrutar tus juegos favoritos con gran velocidad y calidad de imagen.', precio: 564990, imagen: '/img/Consolas_Modernas/Nintendo_Switch_2.png' },
 
   // --- Consolas Retro ---
-  { id: 'sega-engine', grupo: 'Consolas Retro', categoria: 'Consolas Retro', nombre: 'Sega Engine', descripcion: 'Revive los clásicos con esta consola retro cargada de nostalgia.', precio: 199990, imagen: '/img/Consolas_Retro/Sega_Engine.png' },
+  { id: 'sega-engine', grupo: 'Consolas Retro', categoria: 'Consolas Retro', nombre: 'Sega Engine', descripcion: 'Revive los clásicos con esta consola retro cargada de nostalgia.', precio: 199990, imagen: '/img/Consolas_Retro/Sega-engine.png' },
   { id: 'nintendo-64', grupo: 'Consolas Retro', categoria: 'Consolas Retro', nombre: 'Nintendo 64', descripcion: 'Consola retro de la marca Nintendo, ideal para coleccionistas y amantes del gaming clásico.', precio: 199990, imagen: 'https://i.ebayimg.com/images/g/4lgAAOSwLnNjJjPz/s-l1200.jpg' },
 
   // --- PC Gamer ---
@@ -36,9 +36,57 @@ export const grupos = [
   { nombre: 'Videojuegos', id: 'videojuegos' },
   { nombre: 'Consolas Modernas', id: 'consolas-modernas' },
   { nombre: 'Consolas Retro', id: 'consolas-retro' },
-  { nombre: 'PC Gamer', titulo: 'PC Gamer de Escritorio', id: 'Pc Gamer' },
+  { nombre: 'PC Gamer', titulo: 'PC Gamer de Escritorio', id: 'pc-gamer' },
   { nombre: 'Periféricos', titulo: 'Accesorios gamer', id: 'accesorios' },
 ]
+
+export const ofertas = [
+  { productoId: 'fc-2026-ps5', descuento: 15 },
+  { productoId: 'nintendo-switch', descuento: 10 },
+  { productoId: 'teclado-hypex-rgb', descuento: 12 },
+]
+
+export function obtenerOferta(producto) {
+  return ofertas.find((oferta) => oferta.productoId === producto.id) || null
+}
+
+export function obtenerPrecioFinal(producto) {
+  const oferta = obtenerOferta(producto)
+  return oferta ? Math.round(producto.precio * (1 - oferta.descuento / 100)) : producto.precio
+}
+
+export function buscarProductos(consulta) {
+  const terminos = consulta
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+
+  if (terminos.length === 0) return []
+
+  return productos
+    .map((producto) => {
+      const texto = [
+        producto.nombre,
+        producto.grupo,
+        producto.categoria,
+        producto.descripcion,
+        producto.id,
+      ]
+        .join(' ')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+      const coincidencias = terminos.filter((termino) => texto.includes(termino)).length
+
+      return { producto, coincidencias }
+    })
+    .filter(({ coincidencias }) => coincidencias > 0)
+    .sort((a, b) => b.coincidencias - a.coincidencias)
+    .map(({ producto }) => producto)
+}
 
 // 89990 -> "$89.990"
 export const formatearPrecio = (valor) => `$${valor.toLocaleString('es-CL')}`
