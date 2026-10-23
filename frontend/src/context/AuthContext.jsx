@@ -1,5 +1,10 @@
 import { createContext, useContext, useState } from 'react'
-import { iniciarSesionLocal, obtenerSesion, cerrarSesionLocal } from '../utils/usuarios'
+import {
+  iniciarSesionLocal,
+  obtenerSesion,
+  cerrarSesionLocal,
+  guardarPerfilAdministrador,
+} from '../utils/usuarios'
 
 const AuthContext = createContext(null)
 
@@ -19,10 +24,18 @@ export function AuthProvider({ children }) {
     setUsuario(null)
   }
 
+  const actualizarPerfilAdmin = (cambios) => {
+    const resultado = guardarPerfilAdministrador(cambios)
+    if (resultado.ok) {
+      setUsuario(resultado.usuario)
+    }
+    return resultado
+  }
+
   const esAdmin = usuario?.rol === 'admin'
 
   return (
-    <AuthContext.Provider value={{ usuario, esAdmin, iniciarSesion, cerrarSesion }}>
+    <AuthContext.Provider value={{ usuario, esAdmin, iniciarSesion, cerrarSesion, actualizarPerfilAdmin }}>
       {children}
     </AuthContext.Provider>
   )

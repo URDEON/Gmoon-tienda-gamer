@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { productos, formatearPrecio, obtenerOferta, obtenerPrecioFinal } from '../data/productos'
+import { formatearPrecio, obtenerOferta, obtenerPrecioFinal } from '../data/productos'
+import { useProductos } from '../hooks/useProductos'
 import { useCart } from '../context/CartContext'
 import '../styles/detalle-producto.css'
 
 function ProductoDetalle() {
+  const productos = useProductos()
   const { id } = useParams() // lee el :id de la dirección /producto/:id
   const { agregarAlCarrito } = useCart()
   const [productoAgregado, setProductoAgregado] = useState(null)

@@ -1,8 +1,10 @@
 import ProductCard from '../components/ProductCard'
-import { ofertas, productos } from '../data/productos'
+import { ofertas } from '../data/productos'
+import { useProductos } from '../hooks/useProductos'
 import '../styles/productos.css'
 
 function Ofertas() {
+  const productos = useProductos()
   const productosEnOferta = ofertas
     .map(({ productoId }) => productos.find((producto) => producto.id === productoId))
     .filter(Boolean)
