@@ -1,16 +1,68 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { formatearPrecio, obtenerPrecioFinal } from '../data/productos'
+import { descargarComprobante, enviarCorreoCompra } from '../utils/emailService'
 import '../styles/carrito.css'
 
 function Checkout() {
   const navigate = useNavigate()
+  const { usuario } = useAuth()
   const { carrito, totalProductos, totalPrecio, vaciarCarrito } = useCart()
+  const [datosCompra, setDatosCompra] = useState(() => ({
+    email: usuario?.email || '',
+    tipoComprobante: 'boleta',
+  }))
 
-  const simularPago = (aprobado) => {
-    const resumen = { total: totalPrecio, productos: totalProductos }
-    if (aprobado) vaciarCarrito()
-    navigate(`/pago/${aprobado ? 'aprobado' : 'rechazado'}`, { state: resumen })
+  const simularPago = async (aprobado) => {
+    if (!aprobado) {
+      const resumen = { total: totalPrecio, productos: totalProductos }
+      navigate('/pago/rechazado', { state: resumen })
+      return
+    }
+
+    const items = carrito.map((item) => ({
+      id: item.id,
+      nombre: item.nombre,
+      cantidad: item.cantidad,
+      precioUnitario: obtenerPrecioFinal(item),
+    }))
+
+    const clienteEmail = datosCompra.email.trim() || usuario?.email || 'cliente@demo.com'
+    const nombreCliente = usuario?.nombre || 'Cliente'
+    const tipoComprobante = datosCompra.tipoComprobante || 'boleta'
+
+    const envio = await enviarCorreoCompra({
+      clienteNombre: nombreCliente,
+      email: clienteEmail,
+      tipoComprobante,
+      items,
+      total: totalPrecio,
+    })
+
+    const comprobanteData = {
+      clienteNombre: nombreCliente,
+      email: clienteEmail,
+      tipoComprobante,
+      items,
+      total: totalPrecio,
+      numeroPedido: envio.numeroPedido,
+    }
+
+    descargarComprobante(comprobanteData)
+    vaciarCarrito()
+
+    navigate('/pago/aprobado', {
+      state: {
+        total: totalPrecio,
+        productos: totalProductos,
+        email: clienteEmail,
+        tipoComprobante,
+        envio,
+        comprobanteData,
+      },
+    })
   }
 
   if (carrito.length === 0) {
@@ -34,6 +86,27 @@ function Checkout() {
         Esta es una simulación: no se realizará ningún cobro. No ingreses datos bancarios ni de tarjeta.
       </div>
       <div className="resumen-checkout">
+        <div className="campo-compra">
+          <label htmlFor="email-compra">Correo del cliente</label>
+          <input
+            id="email-compra"
+            type="email"
+            value={datosCompra.email}
+            onChange={(event) => setDatosCompra((actual) => ({ ...actual, email: event.target.value }))}
+            placeholder="cliente@correo.com"
+          />
+        </div>
+        <div className="campo-compra">
+          <label htmlFor="tipo-comprobante">Tipo de comprobante</label>
+          <select
+            id="tipo-comprobante"
+            value={datosCompra.tipoComprobante}
+            onChange={(event) => setDatosCompra((actual) => ({ ...actual, tipoComprobante: event.target.value }))}
+          >
+            <option value="boleta">Boleta</option>
+            <option value="factura">Factura</option>
+          </select>
+        </div>
         {carrito.map((item) => (
           <div className="fila-checkout" key={item.id}>
             <span>{item.nombre} × {item.cantidad}</span>

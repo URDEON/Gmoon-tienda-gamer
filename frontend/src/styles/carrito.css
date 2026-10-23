@@ -181,9 +181,51 @@
 }
 
 .resumen-checkout {
+	display: grid;
+	gap: 18px;
 	padding: 20px;
 	border: 1px solid #30234d;
 	background: #11131d;
+}
+
+.campo-compra {
+	display: grid;
+	gap: 10px;
+	padding: 16px;
+	border: 1px solid rgb(0 229 255 / 25%);
+	border-radius: 14px;
+	background: rgba(17, 19, 29, 0.8);
+}
+
+.campo-compra label {
+	color: var(--white);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+
+.campo-compra input,
+.campo-compra select {
+	width: 100%;
+	padding: 14px 16px;
+	border: 1px solid rgba(0, 229, 255, 0.45);
+	border-radius: 10px;
+	background: #0d1018;
+	color: var(--white);
+	font: inherit;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.campo-compra input::placeholder {
+	color: #8f94ae;
+}
+
+.campo-compra input:focus,
+.campo-compra select:focus {
+	outline: none;
+	border-color: var(--cyan);
+	box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
 }
 
 .fila-checkout {
