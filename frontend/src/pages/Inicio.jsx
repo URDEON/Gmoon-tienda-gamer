@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { productos, formatearPrecio } from '../data/productos'
+import { formatearPrecio } from '../data/productos'
+import { useProductos } from '../hooks/useProductos'
 
 const categorias = [
   {
@@ -37,6 +38,7 @@ const categorias = [
 ]
 
 function Inicio() {
+  const productos = useProductos()
   return (
     <>
       <section className="seccion-bienvenida">
@@ -102,7 +104,7 @@ function Inicio() {
                 aria-hidden="true"
               >
                 <span className="marcador-imagen-computador">
-                  <img src={producto.imagenInicio} alt="" />
+                  <img src={producto.imagenInicio || producto.imagen} alt="" />
                 </span>
                 <span>GMOON</span>
                 <strong>

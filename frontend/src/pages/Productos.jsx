@@ -1,12 +1,16 @@
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
-import { buscarProductos, productos, grupos } from '../data/productos'
+import { buscarProductos } from '../data/productos'
+import { useGrupos } from '../hooks/useGrupos'
+import { useProductos } from '../hooks/useProductos'
 import '../styles/productos.css'
 
 function Productos() {
+  const productos = useProductos()
+  const grupos = useGrupos()
   const [searchParams] = useSearchParams()
   const busqueda = searchParams.get('buscar')?.trim() || ''
-  const resultados = busqueda ? buscarProductos(busqueda) : productos
+  const resultados = busqueda ? buscarProductos(busqueda, productos) : productos
 
   return (
     <section className="seccion-catalogo" id="productos" aria-labelledby="titulo-productos">

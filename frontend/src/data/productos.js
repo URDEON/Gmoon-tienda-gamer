@@ -1,5 +1,5 @@
 // Catálogo Gmoon. El precio es un número (CLP) para poder calcular totales.
-export const productos = [
+const PRODUCTOS_INICIALES = [
   // --- Videojuegos ---
   { id: 'fc-2027-ps4', grupo: 'Videojuegos', categoria: 'Videojuegos Deportes', nombre: 'FC 2027 PS4', descripcion: 'El simulador de fútbol más realista, ahora disponible para PS4.', precio: 89990, imagen: '/img/Juegos_Deportes/FC_2027_PS4.png' },
   { id: 'nba-2k26-ps5', grupo: 'Videojuegos', categoria: 'Videojuegos Deportes', nombre: 'NBA 2K26 PS5', descripcion: 'Vive la acción de la NBA con el máximo realismo en PS5.', precio: 89990, imagen: '/img/Juegos_Deportes/NBA 2K26_PS5.png' },
@@ -31,14 +31,138 @@ export const productos = [
   { id: 'silla-gaming-gtplayer', grupo: 'Periféricos', categoria: 'Periféricos', nombre: 'Silla gamer ergonómica', descripcion: 'Silla ergonómica GTPLAYER, pensada para largas jornadas de juego con máximo confort.', precio: 159990, imagen: '/img/Accesorios/Silla gaming GTPLAYER negra y azul.png' },
 ]
 
+const CLAVE_CATALOGO = 'gmoon-react-catalogo'
+const suscriptoresCatalogo = new Set()
+let catalogoInicializado = false
+let revisionCatalogo = 0
+
+export let productos = PRODUCTOS_INICIALES.map((producto) => ({ ...producto, stock: 0 }))
+
+function validarCatalogo(catalogo) {
+  if (!Array.isArray(catalogo) || catalogo.some((producto) => (
+    !producto
+    || typeof producto.id !== 'string'
+    || typeof producto.nombre !== 'string'
+    || typeof producto.grupo !== 'string'
+    || typeof producto.categoria !== 'string'
+    || !Number.isFinite(producto.precio)
+    || !Number.isInteger(producto.stock)
+    || producto.stock < 0
+  ))) {
+    throw new Error('El catálogo guardado no tiene un formato válido.')
+  }
+
+  return catalogo
+}
+
+export function obtenerProductos() {
+  if (!catalogoInicializado) {
+    const guardado = localStorage.getItem(CLAVE_CATALOGO)
+    productos = guardado
+      ? validarCatalogo(JSON.parse(guardado))
+      : PRODUCTOS_INICIALES.map((producto) => ({ ...producto, stock: 0 }))
+    catalogoInicializado = true
+  }
+
+  return productos
+}
+
+export function guardarProductos(nuevoCatalogo) {
+  const catalogoValidado = validarCatalogo(nuevoCatalogo)
+  localStorage.setItem(CLAVE_CATALOGO, JSON.stringify(catalogoValidado))
+  productos = catalogoValidado
+  catalogoInicializado = true
+  revisionCatalogo += 1
+  suscriptoresCatalogo.forEach((suscriptor) => suscriptor())
+}
+
+export function suscribirseAlCatalogo(suscriptor) {
+  suscriptoresCatalogo.add(suscriptor)
+  return () => suscriptoresCatalogo.delete(suscriptor)
+}
+
+export function obtenerRevisionCatalogo() {
+  obtenerProductos()
+  return revisionCatalogo
+}
+
 // Orden, títulos e identificadores de las secciones del catálogo
-export const grupos = [
+const GRUPOS_INICIALES = [
   { nombre: 'Videojuegos', id: 'videojuegos' },
   { nombre: 'Consolas Modernas', id: 'consolas-modernas' },
   { nombre: 'Consolas Retro', id: 'consolas-retro' },
   { nombre: 'PC Gamer', titulo: 'PC Gamer de Escritorio', id: 'pc-gamer' },
   { nombre: 'Periféricos', titulo: 'Accesorios gamer', id: 'accesorios' },
 ]
+
+const CLAVE_GRUPOS = 'gmoon-react-grupos'
+const suscriptoresGrupos = new Set()
+let gruposInicializados = false
+let revisionGrupos = 0
+
+export let grupos = [...GRUPOS_INICIALES]
+
+function validarGrupos(valor) {
+  if (!Array.isArray(valor) || valor.some((grupo) => (
+    !grupo || typeof grupo.nombre !== 'string' || typeof grupo.id !== 'string'
+  ))) {
+    throw new Error('Las categorías guardadas no tienen un formato válido.')
+  }
+
+  return valor
+}
+
+export function obtenerGrupos() {
+  if (!gruposInicializados) {
+    const guardados = localStorage.getItem(CLAVE_GRUPOS)
+    grupos = guardados
+      ? validarGrupos(JSON.parse(guardados))
+      : [...GRUPOS_INICIALES]
+    gruposInicializados = true
+  }
+
+  return grupos
+}
+
+export function guardarGrupo(nombre) {
+  const nombreNormalizado = nombre.trim().replace(/\s+/g, ' ')
+  if (nombreNormalizado.length < 2 || nombreNormalizado.length > 60) {
+    throw new Error('El nombre de la categoría debe tener entre 2 y 60 caracteres.')
+  }
+
+  const existentes = obtenerGrupos()
+  const claveNombre = nombreNormalizado.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  if (existentes.some((grupo) => (
+    grupo.nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() === claveNombre
+  ))) {
+    throw new Error('Ya existe una categoría con ese nombre.')
+  }
+
+  const idBase = claveNombre.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  if (!idBase) {
+    throw new Error('El nombre debe incluir letras o números para crear la categoría.')
+  }
+
+  const nuevoGrupo = { nombre: nombreNormalizado, id: idBase }
+  const gruposActualizados = [...existentes, nuevoGrupo]
+  localStorage.setItem(CLAVE_GRUPOS, JSON.stringify(gruposActualizados))
+  grupos = gruposActualizados
+  gruposInicializados = true
+  revisionGrupos += 1
+  suscriptoresGrupos.forEach((suscriptor) => suscriptor())
+
+  return nuevoGrupo
+}
+
+export function suscribirseAGrupos(suscriptor) {
+  suscriptoresGrupos.add(suscriptor)
+  return () => suscriptoresGrupos.delete(suscriptor)
+}
+
+export function obtenerRevisionGrupos() {
+  obtenerGrupos()
+  return revisionGrupos
+}
 
 export const ofertas = [
   { productoId: 'fc-2026-ps5', descuento: 15 },
@@ -55,7 +179,7 @@ export function obtenerPrecioFinal(producto) {
   return oferta ? Math.round(producto.precio * (1 - oferta.descuento / 100)) : producto.precio
 }
 
-export function buscarProductos(consulta) {
+export function buscarProductos(consulta, catalogo = productos) {
   const terminos = consulta
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -66,7 +190,7 @@ export function buscarProductos(consulta) {
 
   if (terminos.length === 0) return []
 
-  return productos
+  return catalogo
     .map((producto) => {
       const texto = [
         producto.nombre,

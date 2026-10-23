@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
-import { buscarProductos, grupos } from '../data/productos'
+import { buscarProductos } from '../data/productos'
+import { useGrupos } from '../hooks/useGrupos'
+import { useProductos } from '../hooks/useProductos'
 
 const apartadosInicio = [
   { nombre: 'Explora la Tienda', id: 'Explora' },
@@ -21,6 +23,8 @@ function Navbar() {
   const { pathname } = location
   const { totalProductos } = useCart()
   const { usuario, esAdmin, cerrarSesion } = useAuth()
+  const grupos = useGrupos()
+  const productos = useProductos()
   const estaEnInicio = pathname === '/'
 
   // Cierra el menú al hacer clic fuera (reemplaza a menu.js)
@@ -63,7 +67,7 @@ function Navbar() {
       return
     }
 
-    const resultados = buscarProductos(consulta)
+    const resultados = buscarProductos(consulta, productos)
     if (resultados.length > 0) {
       navigate(`/productos?buscar=${encodeURIComponent(consulta)}`)
       return
