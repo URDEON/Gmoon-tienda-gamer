@@ -1,13 +1,11 @@
 import ProductCard from '../components/ProductCard'
-import { ofertas } from '../data/productos'
+import { obtenerOferta } from '../data/productos'
 import { useProductos } from '../hooks/useProductos'
 import '../styles/productos.css'
 
 function Ofertas() {
   const productos = useProductos()
-  const productosEnOferta = ofertas
-    .map(({ productoId }) => productos.find((producto) => producto.id === productoId))
-    .filter(Boolean)
+  const productosEnOferta = productos.filter((producto) => obtenerOferta(producto))
 
   return (
     <section className="seccion-catalogo seccion-ofertas" aria-labelledby="titulo-ofertas">
@@ -21,9 +19,11 @@ function Ofertas() {
         </p>
       </div>
       <div className="rejilla-productos">
-        {productosEnOferta.map((producto) => (
-          <ProductCard key={producto.id} producto={producto} />
-        ))}
+        {productosEnOferta.length > 0
+          ? productosEnOferta.map((producto) => (
+            <ProductCard key={producto.id} producto={producto} />
+          ))
+          : <p className="texto-catalogo">Todavía no hay productos en oferta.</p>}
       </div>
     </section>
   )

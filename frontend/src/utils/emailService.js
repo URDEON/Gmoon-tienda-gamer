@@ -4,6 +4,14 @@ import { calcularTotalesCompra } from '../../shared/calcularTotalesCompra.js'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
+const escaparHtml = (valor) => String(valor).replace(/[&<>"']/g, (caracter) => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+})[caracter])
+
 const formatearLineasProductos = (items = []) =>
   items
     .map((item) => `- ${item.nombre} x${item.cantidad} · ${formatearPrecio(item.precioUnitario * item.cantidad)}`)
@@ -11,8 +19,16 @@ const formatearLineasProductos = (items = []) =>
 
 const crearNumeroPedido = () => `GM-${Date.now()}-${Math.floor(Math.random() * 900 + 100)}`
 
-export async function generarHtmlComprobante({ clienteNombre, email, tipoComprobante = 'boleta', items = [], total, numeroPedido }) {
-  const fecha = new Date().toLocaleString('es-CL', {
+export async function generarHtmlComprobante({
+  clienteNombre,
+  email,
+  tipoComprobante = 'boleta',
+  items = [],
+  total,
+  numeroPedido,
+  fecha: fechaOrden,
+}) {
+  const fecha = new Date(fechaOrden || Date.now()).toLocaleString('es-CL', {
     dateStyle: 'medium',
     timeStyle: 'short',
   })
@@ -21,7 +37,7 @@ export async function generarHtmlComprobante({ clienteNombre, email, tipoComprob
     .map(
       (item) => `
         <tr>
-          <td>${item.nombre}</td>
+          <td>${escaparHtml(item.nombre)}</td>
           <td>${item.cantidad}</td>
           <td>${formatearPrecio(item.precioUnitario)}</td>
           <td>${formatearPrecio(item.precioUnitario * item.cantidad)}</td>
@@ -100,19 +116,19 @@ export async function generarHtmlComprobante({ clienteNombre, email, tipoComprob
             <div class="resumen-grid">
               <div class="tarjeta-info">
                 <span class="label">Número</span>
-                <div class="valor">${numeroPedido}</div>
+                <div class="valor">${escaparHtml(numeroPedido)}</div>
               </div>
               <div class="tarjeta-info">
                 <span class="label">Fecha</span>
-                <div class="valor">${fecha}</div>
+                <div class="valor">${escaparHtml(fecha)}</div>
               </div>
               <div class="tarjeta-info">
                 <span class="label">Cliente</span>
-                <div class="valor">${clienteNombre}</div>
+                <div class="valor">${escaparHtml(clienteNombre)}</div>
               </div>
               <div class="tarjeta-info">
                 <span class="label">Correo</span>
-                <div class="valor">${email}</div>
+                <div class="valor">${escaparHtml(email)}</div>
               </div>
             </div>
 
@@ -140,14 +156,14 @@ export async function generarHtmlComprobante({ clienteNombre, email, tipoComprob
               <div>
                 <div style="font-size: 12px; color: #475569; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">Código QR</div>
                 <div style="color: #0f172a; font-weight: 700;">Gmoon • ${tipoComprobante === 'factura' ? 'Factura' : 'Boleta'} emitida</div>
-                <div style="margin-top: 8px; color: #475569; font-size: 13px;">ID: ${numeroPedido}</div>
+                <div style="margin-top: 8px; color: #475569; font-size: 13px;">ID: ${escaparHtml(numeroPedido)}</div>
               </div>
               <div class="qr-box">
                 <img class="qr-image" src="${qrDataUrl}" alt="Código QR de la compra" />
               </div>
             </div>
           </div>
-          <div class="footer-note">Gracias por elegir Gmoon. Este comprobante confirma tu compra exitosa. Código verificador: ${qrValor}</div>
+          <div class="footer-note">Gracias por elegir Gmoon. Este comprobante confirma tu compra exitosa. Código verificador: ${escaparHtml(qrValor)}</div>
         </div>
       </body>
     </html>
@@ -227,4 +243,3 @@ export async function enviarCorreoCompra({ clienteNombre, email, tipoComprobante
     }
   }
 }
-

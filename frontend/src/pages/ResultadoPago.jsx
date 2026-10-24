@@ -38,6 +38,11 @@ function ResultadoPago() {
           Comprobante enviado a {resumen.email} · {resumen.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'}
         </p>
       )}
+      {aprobado && resumen?.errorGuardadoOrden && (
+        <p className="mensaje-admin mensaje-error-admin" role="alert">
+          La compra fue aprobada, pero no se pudo guardar en el historial de órdenes: {resumen.errorGuardadoOrden}
+        </p>
+      )}
       <div className="acciones-resultado-pago">
         {aprobado && resumen?.comprobanteData && (
           <button

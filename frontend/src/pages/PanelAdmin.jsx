@@ -1,7 +1,10 @@
-import { useState } from 'react'
-import { guardarGrupo, guardarProductos, formatearPrecio } from '../data/productos'
+import { useRef, useState } from 'react'
+import { guardarGrupo, guardarProductos, formatearPrecio, obtenerOferta } from '../data/productos'
+import { obtenerOrdenesPorCorreo } from '../data/ordenes'
+import { useOrdenes } from '../hooks/useOrdenes'
 import { useProductos } from '../hooks/useProductos'
 import { useGrupos } from '../hooks/useGrupos'
+import { generarHtmlComprobante } from '../utils/emailService'
 import {
   actualizarUsuario,
   obtenerPerfilAdministrador,
@@ -19,6 +22,7 @@ const crearFormularioVacio = (grupos) => ({
   categoria: grupos[0]?.nombre || '',
   descripcion: '',
   precio: '',
+  descuento: '0',
   stock: '0',
   imagen: '',
   imagenInicio: '',
@@ -27,6 +31,8 @@ const crearFormularioVacio = (grupos) => ({
 const vistas = [
   { id: 'nuevo', nombre: 'Nuevo producto' },
   { id: 'productos', nombre: 'Mostrar productos' },
+  { id: 'ofertas', nombre: 'Ofertas' },
+  { id: 'ordenes', nombre: 'Órdenes/Boletas' },
   { id: 'criticos', nombre: 'Productos críticos' },
   { id: 'reportes', nombre: 'Reportes' },
   { id: 'categorias', nombre: 'Categorías' },
@@ -56,6 +62,7 @@ function crearId(nombre, catalogo) {
 function PanelAdmin() {
   const { usuario, actualizarPerfilAdmin } = useAuth()
   const productos = useProductos()
+  const ordenes = useOrdenes()
   const grupos = useGrupos()
   const [clientes, setClientes] = useState(obtenerClientes)
   const [vista, setVista] = useState('productos')
@@ -73,8 +80,14 @@ function PanelAdmin() {
   })
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
+  const [ordenMostrada, setOrdenMostrada] = useState(null)
+  const [htmlBoleta, setHtmlBoleta] = useState('')
+  const [cargandoBoleta, setCargandoBoleta] = useState(false)
+  const iframeBoleta = useRef(null)
 
   const productosCriticos = productos.filter((producto) => producto.stock <= UMBRAL_STOCK_CRITICO)
+  const productosEnOferta = productos.filter((producto) => obtenerOferta(producto))
+  const ordenesUsuario = usuarioHistorial ? obtenerOrdenesPorCorreo(usuarioHistorial.email) : []
   const unidadesEnStock = productos.reduce((total, producto) => total + producto.stock, 0)
   const valorInventario = productos.reduce(
     (total, producto) => total + producto.precio * producto.stock,
@@ -92,6 +105,8 @@ function PanelAdmin() {
     setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '' })
     setMensaje('')
     setError('')
+    setOrdenMostrada(null)
+    setHtmlBoleta('')
   }
 
   const editarProducto = (producto) => {
@@ -101,6 +116,7 @@ function PanelAdmin() {
       categoria: producto.categoria,
       descripcion: producto.descripcion,
       precio: String(producto.precio),
+      descuento: String(obtenerOferta(producto)?.descuento || 0),
       stock: String(producto.stock),
       imagen: producto.imagen,
       imagenInicio: producto.imagenInicio || '',
@@ -117,6 +133,7 @@ function PanelAdmin() {
     setMensaje('')
 
     const precio = Number(formulario.precio)
+    const descuento = Number(formulario.descuento)
     const stock = Number(formulario.stock)
     if (!formulario.nombre.trim() || !formulario.categoria.trim() || !formulario.imagen.trim()) {
       setError('Completa el nombre, la categoría y la ruta de la imagen.')
@@ -124,6 +141,10 @@ function PanelAdmin() {
     }
     if (!Number.isInteger(precio) || precio <= 0) {
       setError('Ingresa un precio entero mayor que cero.')
+      return
+    }
+    if (!Number.isInteger(descuento) || descuento < 0 || descuento > 100) {
+      setError('El descuento debe ser un número entero entre 0 y 100.')
       return
     }
     if (!Number.isInteger(stock) || stock < 0) {
@@ -137,6 +158,7 @@ function PanelAdmin() {
       categoria: formulario.categoria.trim(),
       descripcion: formulario.descripcion.trim(),
       precio,
+      descuento,
       stock,
       imagen: formulario.imagen.trim(),
       ...(formulario.imagenInicio.trim() ? { imagenInicio: formulario.imagenInicio.trim() } : {}),
@@ -233,6 +255,22 @@ function PanelAdmin() {
     setMensaje('Perfil de administrador actualizado correctamente.')
   }
 
+  const mostrarBoleta = async (orden) => {
+    setOrdenMostrada(orden)
+    setHtmlBoleta('')
+    setCargandoBoleta(true)
+    setError('')
+    setMensaje('')
+
+    try {
+      setHtmlBoleta(await generarHtmlComprobante(orden))
+    } catch (errorGeneracion) {
+      setError(`No se pudo mostrar el comprobante: ${errorGeneracion.message}`)
+    } finally {
+      setCargandoBoleta(false)
+    }
+  }
+
   const renderFormulario = () => (
     <form className="formulario-producto-admin" onSubmit={guardarFormulario}>
       <div className="campos-producto-admin">
@@ -279,6 +317,18 @@ function PanelAdmin() {
             step="1"
             value={formulario.precio}
             onChange={(event) => setFormulario({ ...formulario, precio: event.target.value })}
+          />
+        </label>
+        <label>
+          Descuento (%, 0 para quitar)
+          <input
+            required
+            type="number"
+            min="0"
+            max="100"
+            step="1"
+            value={formulario.descuento}
+            onChange={(event) => setFormulario({ ...formulario, descuento: event.target.value })}
           />
         </label>
         <label>
@@ -344,32 +394,37 @@ function PanelAdmin() {
             <th>Producto</th>
             <th>Grupo / Categoría</th>
             <th>Precio</th>
+            <th>Descuento</th>
             <th>Stock</th>
             <th>Acción</th>
           </tr>
         </thead>
         <tbody>
-          {lista.map((producto) => (
-            <tr key={producto.id}>
-              <td>{producto.nombre}</td>
-              <td>{producto.grupo} / {producto.categoria}</td>
-              <td>{formatearPrecio(producto.precio)}</td>
-              <td>
-                <span className={producto.stock <= UMBRAL_STOCK_CRITICO ? 'stock-critico-admin' : ''}>
-                  {producto.stock}
-                </span>
-              </td>
-              <td>
-                <button
-                  className="boton-editar-admin"
-                  type="button"
-                  onClick={() => editarProducto(producto)}
-                >
-                  Editar
-                </button>
-              </td>
-            </tr>
-          ))}
+          {lista.map((producto) => {
+            const oferta = obtenerOferta(producto)
+            return (
+              <tr key={producto.id}>
+                <td>{producto.nombre}</td>
+                <td>{producto.grupo} / {producto.categoria}</td>
+                <td>{formatearPrecio(producto.precio)}</td>
+                <td>{oferta ? `-${oferta.descuento}%` : 'Sin oferta'}</td>
+                <td>
+                  <span className={producto.stock <= UMBRAL_STOCK_CRITICO ? 'stock-critico-admin' : ''}>
+                    {producto.stock}
+                  </span>
+                </td>
+                <td>
+                  <button
+                    className="boton-editar-admin"
+                    type="button"
+                    onClick={() => editarProducto(producto)}
+                  >
+                    Editar
+                  </button>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>
@@ -398,6 +453,11 @@ function PanelAdmin() {
           <span className="etiqueta-tarjeta-admin">ATENCIÓN</span>
           <h2>Stock crítico (≤ {UMBRAL_STOCK_CRITICO})</h2>
           <strong>{productosCriticos.length}</strong>
+        </article>
+        <article className="tarjeta-admin">
+          <span className="etiqueta-tarjeta-admin">PROMOCIONES</span>
+          <h2>Productos en oferta</h2>
+          <strong>{productosEnOferta.length}</strong>
         </article>
       </div>
 
@@ -431,6 +491,103 @@ function PanelAdmin() {
         <section aria-labelledby="titulo-listado-productos">
           <h2 className="titulo-tabla-admin" id="titulo-listado-productos">Productos del catálogo</h2>
           {tablaProductos(productos)}
+        </section>
+      )}
+
+      {vista === 'ofertas' && (
+        <section aria-labelledby="titulo-ofertas-admin">
+          <h2 className="titulo-tabla-admin" id="titulo-ofertas-admin">Descuentos de productos</h2>
+          <p className="descripcion-dashboard">
+            Edita cualquier producto para agregar, cambiar o quitar su descuento. Los cambios también se verán en la tienda.
+          </p>
+          {tablaProductos(productos)}
+        </section>
+      )}
+
+      {vista === 'ordenes' && (
+        <section aria-labelledby="titulo-ordenes-admin">
+          <h2 className="titulo-tabla-admin" id="titulo-ordenes-admin">Órdenes y boletas</h2>
+          <p className="descripcion-dashboard">
+            Compras aprobadas guardadas en este navegador. Selecciona “Mostrar boleta” para consultar o imprimir un comprobante.
+          </p>
+          {ordenes.length === 0 ? (
+            <p className="vacio-admin">Todavía no hay órdenes registradas en este navegador.</p>
+          ) : (
+            <div className="tabla-admin-contenedor">
+              <table className="tabla-admin">
+                <thead>
+                  <tr>
+                    <th>Número</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Comprobante</th>
+                    <th>Total</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ordenes.map((orden) => (
+                    <tr key={orden.numeroPedido}>
+                      <td>{orden.numeroPedido}</td>
+                      <td>{new Date(orden.fecha).toLocaleString('es-CL')}</td>
+                      <td>{orden.clienteNombre}<br /><small>{orden.email}</small></td>
+                      <td>{orden.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'}</td>
+                      <td>{formatearPrecio(orden.total)}</td>
+                      <td>
+                        <button
+                          className="boton-editar-admin"
+                          type="button"
+                          onClick={() => mostrarBoleta(orden)}
+                        >
+                          Mostrar boleta
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {ordenMostrada && (
+            <section className="vista-boleta-admin" aria-labelledby="titulo-vista-boleta">
+              <div className="encabezado-boleta-admin">
+                <h3 id="titulo-vista-boleta">
+                  {ordenMostrada.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'} {ordenMostrada.numeroPedido}
+                </h3>
+                <div className="acciones-formulario-admin">
+                  <button
+                    className="boton-admin-principal"
+                    type="button"
+                    disabled={!htmlBoleta}
+                    onClick={() => iframeBoleta.current?.contentWindow?.print()}
+                  >
+                    Imprimir
+                  </button>
+                  <button
+                    className="boton-admin-secundario"
+                    type="button"
+                    onClick={() => {
+                      setOrdenMostrada(null)
+                      setHtmlBoleta('')
+                    }}
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+              {cargandoBoleta && <p className="descripcion-dashboard">Generando comprobante…</p>}
+              {htmlBoleta && (
+                <iframe
+                  ref={iframeBoleta}
+                  className="iframe-boleta-admin"
+                  title={`Comprobante ${ordenMostrada.numeroPedido}`}
+                  sandbox="allow-same-origin"
+                  srcDoc={htmlBoleta}
+                />
+              )}
+            </section>
+          )}
         </section>
       )}
 
@@ -715,14 +872,100 @@ function PanelAdmin() {
           )}
 
           {vistaUsuarios === 'historial' && (
-            <section className="historial-pendiente-admin" aria-live="polite">
+            <section aria-live="polite">
               <h3 className="subtitulo-reporte-admin">
                 {usuarioHistorial ? `Compras de ${usuarioHistorial.nombre}` : 'Historial de compras'}
               </h3>
-              <p>
-                El historial estará disponible cuando se integre el módulo de órdenes y boletas.
-                Por ahora no hay compras registradas para consultar.
-              </p>
+              {usuarioHistorial ? (
+                <>
+                  <p className="descripcion-dashboard">
+                    Órdenes vinculadas al correo {usuarioHistorial.email}.
+                  </p>
+                  {ordenesUsuario.length === 0 ? (
+                    <p className="vacio-admin">Este usuario todavía no tiene compras registradas.</p>
+                  ) : (
+                    <div className="tabla-admin-contenedor">
+                      <table className="tabla-admin">
+                        <thead>
+                          <tr>
+                            <th>Número</th>
+                            <th>Fecha</th>
+                            <th>Productos</th>
+                            <th>Comprobante</th>
+                            <th>Total</th>
+                            <th>Acción</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {ordenesUsuario.map((orden) => (
+                            <tr key={orden.numeroPedido}>
+                              <td>{orden.numeroPedido}</td>
+                              <td>{new Date(orden.fecha).toLocaleString('es-CL')}</td>
+                              <td>{orden.items.reduce((total, item) => total + item.cantidad, 0)}</td>
+                              <td>{orden.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'}</td>
+                              <td>{formatearPrecio(orden.total)}</td>
+                              <td>
+                                <button
+                                  className="boton-editar-admin"
+                                  type="button"
+                                  onClick={() => {
+                                    setVista('ordenes')
+                                    mostrarBoleta(orden)
+                                  }}
+                                >
+                                  Mostrar boleta
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                  <div className="acciones-formulario-admin">
+                    <button
+                      className="boton-admin-secundario"
+                      type="button"
+                      onClick={() => setUsuarioHistorial(null)}
+                    >
+                      Ver otro usuario
+                    </button>
+                  </div>
+                </>
+              ) : clientes.length === 0 ? (
+                <p className="vacio-admin">Todavía no hay usuarios registrados para consultar.</p>
+              ) : (
+                <>
+                  <p className="descripcion-dashboard">Selecciona un usuario para ver sus boletas.</p>
+                  <div className="tabla-admin-contenedor">
+                    <table className="tabla-admin">
+                      <thead>
+                        <tr><th>Nombre</th><th>Correo</th><th>Acción</th></tr>
+                      </thead>
+                      <tbody>
+                        {clientes.map((cliente) => (
+                          <tr key={cliente.email}>
+                            <td>{cliente.nombre}</td>
+                            <td>{cliente.email}</td>
+                            <td>
+                              <button
+                                className="boton-editar-admin"
+                                type="button"
+                                onClick={() => setUsuarioHistorial({
+                                  nombre: cliente.nombre,
+                                  email: cliente.email,
+                                })}
+                              >
+                                Ver historial
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
             </section>
           )}
         </section>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { formatearPrecio } from '../data/productos'
+import { formatearPrecio, obtenerOferta, obtenerPrecioFinal } from '../data/productos'
 import { useProductos } from '../hooks/useProductos'
 
 const categorias = [
@@ -91,36 +91,42 @@ function Inicio() {
           <Link className="enlace-seccion" to="/productos#pc-gamer">Ver todos los productos <span aria-hidden="true">→</span></Link>
         </div>
         <div className="rejilla-computadores">
-          {productos.filter((producto) => producto.grupo === 'PC Gamer').map((producto) => (
-            <article className="tarjeta-computador" key={producto.id}>
-              <div
-                className={`visual-computador ${
-                  producto.categoria === 'PC Gamer Pro'
-                    ? 'visual-computador-morado'
-                    : producto.categoria === 'PC Gamer Ultra'
-                      ? 'visual-computador-cyan'
-                      : 'visual-computador-azul'
-                }`}
-                aria-hidden="true"
-              >
-                <span className="marcador-imagen-computador">
-                  <img src={producto.imagenInicio || producto.imagen} alt="" />
-                </span>
-                <span>GMOON</span>
-                <strong>
-                  {producto.categoria === 'PC Gamer'
-                    ? 'STARTER'
-                    : producto.categoria.replace('PC Gamer ', '').toUpperCase()}
-                </strong>
-              </div>
-              <div className="contenido-computador">
-                <p>PC Gamer</p>
-                <h3>{producto.nombre}</h3>
-                <span className="precio-computador">{formatearPrecio(producto.precio)}</span>
-                <Link to={`/producto/${producto.id}`}>Ver producto</Link>
-              </div>
-            </article>
-          ))}
+          {productos.filter((producto) => producto.grupo === 'PC Gamer').map((producto) => {
+            const oferta = obtenerOferta(producto)
+            return (
+              <article className="tarjeta-computador" key={producto.id}>
+                <div
+                  className={`visual-computador ${
+                    producto.categoria === 'PC Gamer Pro'
+                      ? 'visual-computador-morado'
+                      : producto.categoria === 'PC Gamer Ultra'
+                        ? 'visual-computador-cyan'
+                        : 'visual-computador-azul'
+                  }`}
+                  aria-hidden="true"
+                >
+                  <span className="marcador-imagen-computador">
+                    <img src={producto.imagenInicio || producto.imagen} alt="" />
+                  </span>
+                  <span>GMOON</span>
+                  <strong>
+                    {producto.categoria === 'PC Gamer'
+                      ? 'STARTER'
+                      : producto.categoria.replace('PC Gamer ', '').toUpperCase()}
+                  </strong>
+                </div>
+                <div className="contenido-computador">
+                  <p>PC Gamer</p>
+                  <h3>{producto.nombre}</h3>
+                  <span className="precio-computador">
+                    {oferta && <del>{formatearPrecio(producto.precio)} </del>}
+                    {formatearPrecio(obtenerPrecioFinal(producto))}
+                  </span>
+                  <Link to={`/producto/${producto.id}`}>Ver producto</Link>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </section>
 

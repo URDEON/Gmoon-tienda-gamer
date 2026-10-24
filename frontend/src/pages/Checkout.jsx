@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { formatearPrecio, obtenerPrecioFinal } from '../data/productos'
+import { guardarOrden } from '../data/ordenes'
 import { descargarComprobante, enviarCorreoCompra } from '../utils/emailService'
 import '../styles/carrito.css'
 
@@ -50,6 +51,17 @@ function Checkout() {
       numeroPedido: envio.numeroPedido,
     }
 
+    let errorGuardadoOrden = ''
+    try {
+      guardarOrden({
+        ...comprobanteData,
+        usuarioEmail: usuario?.email?.trim().toLowerCase() || clienteEmail.toLowerCase(),
+        fecha: new Date().toISOString(),
+      })
+    } catch (errorGuardado) {
+      errorGuardadoOrden = errorGuardado.message
+    }
+
     descargarComprobante(comprobanteData)
     vaciarCarrito()
 
@@ -61,6 +73,7 @@ function Checkout() {
         tipoComprobante,
         envio,
         comprobanteData,
+        errorGuardadoOrden,
       },
     })
   }

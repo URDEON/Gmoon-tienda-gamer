@@ -48,6 +48,8 @@ function validarCatalogo(catalogo) {
     || !Number.isFinite(producto.precio)
     || !Number.isInteger(producto.stock)
     || producto.stock < 0
+    || (producto.descuento !== undefined
+      && (!Number.isInteger(producto.descuento) || producto.descuento < 0 || producto.descuento > 100))
   ))) {
     throw new Error('El catálogo guardado no tiene un formato válido.')
   }
@@ -171,7 +173,13 @@ export const ofertas = [
 ]
 
 export function obtenerOferta(producto) {
-  return ofertas.find((oferta) => oferta.productoId === producto.id) || null
+  const descuento = producto.descuento === undefined
+    ? ofertas.find((oferta) => oferta.productoId === producto.id)?.descuento
+    : producto.descuento
+
+  return Number.isInteger(descuento) && descuento > 0 && descuento <= 100
+    ? { productoId: producto.id, descuento }
+    : null
 }
 
 export function obtenerPrecioFinal(producto) {

@@ -343,6 +343,37 @@
 	color: #e6e6f2;
 }
 
+.vista-boleta-admin {
+	margin-top: 24px;
+	padding: 20px;
+	border: 1px solid #30234d;
+	background: #17132a;
+}
+
+.encabezado-boleta-admin {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.encabezado-boleta-admin h3 {
+	margin: 0;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 24px;
+	text-transform: uppercase;
+}
+
+.iframe-boleta-admin {
+	display: block;
+	width: 100%;
+	min-height: 720px;
+	border: 0;
+	background: #fff;
+}
+
 @media (max-width: 600px) {
 	.campos-producto-admin {
 		grid-template-columns: 1fr;
@@ -350,5 +381,9 @@
 
 	.campo-producto-completo {
 		grid-column: auto;
+	}
+
+	.iframe-boleta-admin {
+		min-height: 900px;
 	}
 }
