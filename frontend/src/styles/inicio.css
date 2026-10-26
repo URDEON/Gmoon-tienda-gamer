@@ -97,9 +97,7 @@
 }
 
 .rejilla-computadores {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 24px;
+	align-items: stretch;
 }
 
 .tarjeta-computador {
@@ -535,9 +533,7 @@
 }
 
 .rejilla-categorias {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 16px;
+	align-items: stretch;
 }
 
 .tarjeta-categoria {
@@ -683,17 +679,9 @@
 		font-size: 42px;
 	}
 
-	.rejilla-computadores {
-		grid-template-columns: 1fr;
-	}
-
 	.seccion-categorias {
 		width: min(100% - 32px, 620px);
 		padding: 0 0 68px;
-	}
-
-	.rejilla-categorias {
-		grid-template-columns: repeat(2, 1fr);
 	}
 
 	.seccion-contacto {
@@ -745,10 +733,6 @@
 	.seccion-categorias {
 		width: min(100% - 24px, 620px);
 		padding-bottom: 56px;
-	}
-
-	.rejilla-categorias {
-		grid-template-columns: 1fr;
 	}
 
 	.seccion-contacto {

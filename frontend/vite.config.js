@@ -7,5 +7,12 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     clearMocks: true,
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{js,jsx}', 'shared/**/*.js'],
+      exclude: ['**/*.{test,spec}.{js,jsx}'],
+      reporter: ['text', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+    },
   },
 })

@@ -8,7 +8,7 @@ function Ofertas() {
   const productosEnOferta = productos.filter((producto) => obtenerOferta(producto))
 
   return (
-    <section className="seccion-catalogo seccion-ofertas" aria-labelledby="titulo-ofertas">
+    <section className="seccion-catalogo seccion-ofertas container" aria-labelledby="titulo-ofertas">
       <div className="encabezado-catalogo">
         <div>
           <p className="etiqueta-seccion">PROMOCIONES DE EJEMPLO</p>
@@ -18,12 +18,14 @@ function Ofertas() {
           Estas ofertas son demostrativas y no representan precios comerciales vigentes.
         </p>
       </div>
-      <div className="rejilla-productos">
+      <div className="rejilla-productos row g-4">
         {productosEnOferta.length > 0
           ? productosEnOferta.map((producto) => (
-            <ProductCard key={producto.id} producto={producto} />
+            <div className="col-12 col-sm-6 col-lg-3" key={producto.id}>
+              <ProductCard producto={producto} />
+            </div>
           ))
-          : <p className="texto-catalogo">Todavía no hay productos en oferta.</p>}
+          : <p className="texto-catalogo col-12">Todavía no hay productos en oferta.</p>}
       </div>
     </section>
   )

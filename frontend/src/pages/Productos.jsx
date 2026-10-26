@@ -13,7 +13,7 @@ function Productos() {
   const resultados = busqueda ? buscarProductos(busqueda, productos) : productos
 
   return (
-    <section className="seccion-catalogo" id="productos" aria-labelledby="titulo-productos">
+    <section className="seccion-catalogo container" id="productos" aria-labelledby="titulo-productos">
       <div className="encabezado-catalogo">
         <div>
           <p className="etiqueta-seccion">{busqueda ? 'RESULTADOS DE BÚSQUEDA' : 'CATÁLOGO GMOON'}</p>
@@ -37,8 +37,12 @@ function Productos() {
         return (
         <section key={id} id={id} className="grupo-categoria">
           <h2 className="titulo-categoria">{titulo || nombre}</h2>
-          <div className="rejilla-productos">
-            {productosDelGrupo.map((producto) => <ProductCard key={producto.id} producto={producto} />)}
+          <div className="rejilla-productos row g-4">
+            {productosDelGrupo.map((producto) => (
+              <div className="col-12 col-sm-6 col-lg-3" key={producto.id}>
+                <ProductCard producto={producto} />
+              </div>
+            ))}
           </div>
         </section>
         )
