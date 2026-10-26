@@ -1,8 +1,7 @@
-import test from 'node:test'
-import assert from 'node:assert/strict'
+import { expect, it } from 'vitest'
 import { calcularTotalesCompra } from './calcularTotalesCompra.js'
 
-test('calcularTotalesCompra suma el IVA al neto para el total a pagar', () => {
+it('calcularTotalesCompra suma el IVA al neto para el total a pagar', () => {
   const resultado = calcularTotalesCompra(
     [
       { precioUnitario: 1000, cantidad: 2 },
@@ -11,7 +10,7 @@ test('calcularTotalesCompra suma el IVA al neto para el total a pagar', () => {
     2750
   )
 
-  assert.equal(resultado.neto, 2750)
-  assert.equal(resultado.iva, 522.5)
-  assert.equal(resultado.totalFinal, 3272.5)
+  expect(resultado.neto).toBe(2750)
+  expect(resultado.iva).toBe(522.5)
+  expect(resultado.totalFinal).toBe(3272.5)
 })
