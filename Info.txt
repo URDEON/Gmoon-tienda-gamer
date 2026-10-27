@@ -1,0 +1,54 @@
+Hecho
+Se creó y mejoró la página principal en index.html.
+Se agregaron secciones:
+Banner principal.
+Explora la tienda.
+Computadores gamer.
+Nosotros.
+Blog.
+Contacto con mapa, teléfono, correo, redes y horario.
+Se mejoró el diseño responsive para computador y celular.
+Se ordenó el header global:
+Logo enlazado al inicio.
+Menú de categorías.
+Buscador con nuevo diseño.
+Enlace de ingreso.
+“Mis compras 🛒” como un solo enlace al carrito.
+Se mejoraron las imágenes de categorías, blog y computadores.
+Se creó el detalle dinámico de productos:
+Info_producto.html
+detalle-producto.css
+detalle-producto.js
+Se creó el blog dinámico:
+articulo.html
+articulo.css
+articulos.js
+Se agregaron productos con imágenes, nombres y precios al catálogo.
+Se creó el carrito:
+carrito.css
+carrito.js
+Guarda productos en localStorage.
+Permite sumar, restar y eliminar.
+Calcula el total.
+Muestra mensaje si está vacío.
+Se prepararon las páginas de Login, Registro, Detalle, Carrito y Mis compras.
+Se agregaron imágenes de consolas, PC, categorías y videojuegos.
+Git
+El commit principal se creó en main:
+
+
+Después se copió correctamente a tu rama Bastian mediante cherry-pick:
+
+
+La rama de Omar fue revisada, pero todavía no se debe fusionar completa porque eliminaría archivos tuyos. Solo se integrará su sección de videojuegos y sus imágenes.
+
+Pendiente
+Terminar de integrar los productos de Omar.
+Conectar todos los productos al detalle.
+Terminar el carrito y probarlo visualmente.
+Confirmar Login y Registro cuando tu compañero los termine.
+Agregar validaciones JS.
+Crear búsqueda funcional.
+Completar panel administrador.
+Implementar roles.
+Revisar y hacer commit de los últimos cambios del carrito.

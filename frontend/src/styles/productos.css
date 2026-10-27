@@ -1,0 +1,248 @@
+/* Página de productos */
+.seccion-catalogo {
+	width: min(1200px, calc(100% - 64px));
+	margin: 56px auto 80px;
+}
+
+.encabezado-catalogo {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 28px;
+}
+
+.encabezado-catalogo h1 {
+	margin: 8px 0 0;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 52px;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.contenido-producto h3{
+	color: chartreuse
+}
+
+.texto-catalogo {
+	max-width: 560px;
+	margin: 0;
+	color: #c9c9d8;
+	line-height: 1.6;
+}
+
+.mensaje-sin-resultados {
+	margin: 40px 0;
+	padding: 24px;
+	border: 1px solid #30234d;
+	color: #c9c9d8;
+	background: #11131d;
+	line-height: 1.6;
+}
+
+.grupo-categoria {
+	margin-top: 48px;
+}
+
+.titulo-categoria {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin: 0 0 20px;
+	color: var(--white);
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 32px;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.titulo-categoria::after {
+	content: '';
+	flex: 1;
+	height: 1px;
+	background: linear-gradient(90deg, var(--pink), transparent);
+}
+
+.rejilla-productos {
+	align-items: stretch;
+}
+
+.tarjeta-producto {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	border: 1px solid #30234d;
+	background: #11131d;
+	box-shadow: 0 12px 24px rgb(0 0 0 / 20%);
+	transition: transform .2s ease, border-color .2s ease;
+}
+
+.tarjeta-producto:hover {
+	transform: translateY(-4px);
+	border-color: var(--cyan);
+}
+
+.visual-producto {
+	position: relative;
+	display: grid;
+	place-items: center;
+	aspect-ratio: 1 / 1;
+	width: 100%;
+	min-height: 220px;
+	padding: 24px;
+	color: var(--cyan);
+	background: radial-gradient(circle, #25264e, #0b0c17 70%);
+	font-size: 64px;
+}
+
+.visual-producto img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: center;
+}
+
+.etiqueta-oferta {
+	display: inline-flex;
+	align-items: center;
+	width: fit-content;
+	padding: 6px 10px;
+	border: 1px solid var(--pink);
+	border-radius: 999px;
+	color: var(--white);
+	background: #401a45;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.visual-producto > .etiqueta-oferta {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	z-index: 1;
+}
+
+.visual-producto.silla-gamer {
+	position: relative;
+	overflow: hidden;
+	padding: 8px 22px 0;
+	align-items: end;
+}
+
+.visual-producto.silla-gamer img {
+	position: absolute;
+	inset: 8px 22px 0;
+	width: calc(100% - 44px);
+	height: calc(100% - 8px);
+	object-position: center bottom;
+}
+
+.visual-producto.mouse-gamer {
+	position: relative;
+	overflow: hidden;
+	padding: 16px;
+}
+
+.visual-producto.mouse-gamer img {
+	width: 72%;
+	height: 72%;
+	margin: auto;
+	object-fit: contain;
+	object-position: center;
+}
+
+.contenido-producto {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 20px;
+}
+
+.categoria-producto {
+	margin: 0 0 10px;
+	color: var(--pink);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.contenido-producto h3 {
+	margin: 0 0 14px;
+	font-size: 18px;
+	line-height: 1.3;
+}
+
+.precio-producto {
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: auto 0 18px;
+	color: var(--cyan);
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.precio-producto del {
+	color: #a5a5b8;
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.seccion-ofertas .encabezado-catalogo {
+	padding: 22px;
+	border: 1px solid rgb(240 77 213 / 35%);
+	background: linear-gradient(120deg, rgb(240 77 213 / 10%), #11131d);
+}
+
+.boton-producto {
+	padding: 11px 14px;
+	border: 1px solid var(--cyan);
+	color: var(--white);
+	background: transparent;
+	font: inherit;
+	font-weight: 700;
+	text-align: center;
+}
+
+.boton-producto:hover {
+	color: var(--charcoal);
+	background: var(--cyan);
+}
+
+@media (max-width: 850px) {
+	.seccion-catalogo {
+		width: min(100% - 32px, 620px);
+		margin: 40px auto 56px;
+	}
+
+	.encabezado-catalogo {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.encabezado-catalogo h1 {
+		font-size: 42px;
+	}
+
+	.grupo-categoria {
+		margin-top: 40px;
+	}
+}
+
+@media (max-width: 480px) {
+	.seccion-catalogo {
+		width: min(100% - 24px, 620px);
+	}
+
+	.encabezado-catalogo h1 {
+		font-size: 36px;
+	}
+
+	.titulo-categoria {
+		font-size: 28px;
+	}
+}
