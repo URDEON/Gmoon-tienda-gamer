@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { formatearPrecio, obtenerOferta, obtenerPrecioFinal } from '../data/productos'
-import { useProductos } from '../hooks/useProductos'
+import { useCatalogoEstado, useProductos } from '../hooks/useProductos'
 import { useCart } from '../context/CartContext'
 import '../styles/detalle-producto.css'
 
 function ProductoDetalle() {
   const productos = useProductos()
+  const estadoCatalogo = useCatalogoEstado()
   const { id } = useParams() // lee el :id de la dirección /producto/:id
   const { agregarAlCarrito } = useCart()
   const [productoAgregado, setProductoAgregado] = useState(null)
@@ -22,8 +23,15 @@ function ProductoDetalle() {
         </Link>
         <section className="detalle-producto">
           <div className="contenido-detalle-producto">
-            <h1>Producto no encontrado</h1>
-            <p>El producto que buscas no existe o fue retirado del catálogo.</p>
+            <h1>{estadoCatalogo.cargando ? 'Cargando catálogo...' : 'Producto no encontrado'}</h1>
+            {estadoCatalogo.error ? (
+              <>
+                <p role="alert">No se pudo cargar el catálogo: {estadoCatalogo.error}</p>
+                <button type="button" onClick={estadoCatalogo.reintentar}>Reintentar</button>
+              </>
+            ) : !estadoCatalogo.cargando && (
+              <p>El producto que buscas no existe o fue retirado del catálogo.</p>
+            )}
           </div>
         </section>
       </>

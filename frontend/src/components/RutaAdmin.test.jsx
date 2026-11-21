@@ -1,12 +1,12 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import RutaAdmin from './RutaAdmin'
 
 afterEach(cleanup)
 
-vi.mock('../context/AuthContext', () => ({
+vi.mock('../context/useAuth', () => ({
   useAuth: vi.fn(),
 }))
 

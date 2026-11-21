@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 
 // Solo deja pasar a administradores. Los demás son redirigidos.
 function RutaAdmin({ children }) {

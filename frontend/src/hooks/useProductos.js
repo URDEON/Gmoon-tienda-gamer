@@ -1,4 +1,10 @@
-import { useSyncExternalStore } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
+import {
+  cargarCatalogo,
+  obtenerEstadoCatalogo,
+  reintentarCargaCatalogo,
+  suscribirseAlEstadoCatalogo,
+} from '../api/catalogoStore'
 import {
   obtenerProductos,
   obtenerRevisionCatalogo,
@@ -7,5 +13,17 @@ import {
 
 export function useProductos() {
   useSyncExternalStore(suscribirseAlCatalogo, obtenerRevisionCatalogo)
-  return obtenerProductos()
+  const estado = useCatalogoEstado()
+  useEffect(() => {
+    void cargarCatalogo()
+  }, [])
+  return estado.cargando || estado.error ? [] : obtenerProductos()
+}
+
+export function useCatalogoEstado() {
+  const estado = useSyncExternalStore(
+    suscribirseAlEstadoCatalogo,
+    obtenerEstadoCatalogo,
+  )
+  return { ...estado, reintentar: reintentarCargaCatalogo }
 }

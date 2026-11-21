@@ -2,11 +2,12 @@ import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import { buscarProductos } from '../data/productos'
 import { useGrupos } from '../hooks/useGrupos'
-import { useProductos } from '../hooks/useProductos'
+import { useCatalogoEstado, useProductos } from '../hooks/useProductos'
 import '../styles/productos.css'
 
 function Productos() {
   const productos = useProductos()
+  const estadoCatalogo = useCatalogoEstado()
   const grupos = useGrupos()
   const [searchParams] = useSearchParams()
   const busqueda = searchParams.get('buscar')?.trim() || ''
@@ -25,6 +26,17 @@ function Productos() {
             : 'Encuentra el equipo, juego o accesorio que necesitas para tu próxima partida.'}
         </p>
       </div>
+
+      {estadoCatalogo.cargando && <p role="status">Cargando catálogo...</p>}
+      {estadoCatalogo.error && (
+        <div role="alert">
+          <p>No se pudo cargar el catálogo: {estadoCatalogo.error}</p>
+          <button type="button" onClick={estadoCatalogo.reintentar}>Reintentar</button>
+        </div>
+      )}
+      {!estadoCatalogo.cargando && !estadoCatalogo.error && productos.length === 0 && (
+        <p role="status">Aún no hay productos publicados.</p>
+      )}
 
       {busqueda && resultados.length === 0 ? (
         <p className="mensaje-sin-resultados" role="status">

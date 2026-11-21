@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import { buscarProductos } from '../data/productos'
 import { useGrupos } from '../hooks/useGrupos'
 import { useProductos } from '../hooks/useProductos'

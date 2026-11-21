@@ -156,6 +156,15 @@ export function guardarGrupo(nombre) {
   return nuevoGrupo
 }
 
+export function guardarGrupos(nuevosGrupos) {
+  const gruposValidados = validarGrupos(nuevosGrupos)
+  localStorage.setItem(CLAVE_GRUPOS, JSON.stringify(gruposValidados))
+  grupos = gruposValidados
+  gruposInicializados = true
+  revisionGrupos += 1
+  suscriptoresGrupos.forEach((suscriptor) => suscriptor())
+}
+
 export function suscribirseAGrupos(suscriptor) {
   suscriptoresGrupos.add(suscriptor)
   return () => suscriptoresGrupos.delete(suscriptor)

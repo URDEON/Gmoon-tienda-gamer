@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatearPrecio, obtenerOferta, obtenerPrecioFinal } from '../data/productos'
-import { useProductos } from '../hooks/useProductos'
+import { useCatalogoEstado, useProductos } from '../hooks/useProductos'
 
 const categorias = [
   {
@@ -39,6 +39,7 @@ const categorias = [
 
 function Inicio() {
   const productos = useProductos()
+  const estadoCatalogo = useCatalogoEstado()
   return (
     <>
       <section className="seccion-bienvenida">
@@ -130,6 +131,7 @@ function Inicio() {
             )
           })}
         </div>
+        {estadoCatalogo.error && <p role="alert">No se pudo cargar el catálogo: {estadoCatalogo.error}</p>}
       </section>
 
       <section className="seccion-nosotros" id="Nosotros" aria-labelledby="titulo-nosotros">

@@ -22,10 +22,10 @@ function ResultadoPago() {
   return (
     <section className={`seccion-carrito resultado-pago ${aprobado ? 'pago-exitoso' : 'pago-fallido'}`} aria-labelledby="titulo-resultado">
       <p className="etiqueta-seccion">RESULTADO DE DEMOSTRACIÓN</p>
-      <h1 id="titulo-resultado">{aprobado ? 'Pago aprobado' : 'Pago rechazado'}</h1>
+      <h1 id="titulo-resultado">{aprobado ? 'Compra registrada' : 'Pago rechazado'}</h1>
       <p>
         {aprobado
-          ? 'La simulación terminó correctamente. No se realizó ningún cobro real.'
+          ? 'La boleta se registró correctamente. No se realizó ningún cobro real.'
           : 'La simulación rechazó el pago. Tus productos siguen guardados en el carrito.'}
       </p>
       {resumen && (
@@ -35,12 +35,12 @@ function ResultadoPago() {
       )}
       {aprobado && resumen?.tipoComprobante && (
         <p>
-          Comprobante enviado a {resumen.email} · {resumen.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'}
+          Boleta {resumen.numeroPedido} · {resumen.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'} para {resumen.email}
         </p>
       )}
       {aprobado && resumen?.errorGuardadoOrden && (
         <p className="mensaje-admin mensaje-error-admin" role="alert">
-          La compra fue aprobada, pero no se pudo guardar en el historial de órdenes: {resumen.errorGuardadoOrden}
+          La boleta se registró, pero no se pudo completar una acción local: {resumen.errorGuardadoOrden}
         </p>
       )}
       <div className="acciones-resultado-pago">

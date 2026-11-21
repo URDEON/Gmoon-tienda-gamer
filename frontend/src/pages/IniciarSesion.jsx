@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CampoFormulario from '../components/CampoFormulario'
 import { validarEmail, validarPassword } from '../utils/validaciones'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
+import { mensajeErrorApi } from '../api/http'
 import '../styles/login.css'
 
 const validadores = { email: validarEmail, password: validarPassword }
@@ -14,6 +15,7 @@ function IniciarSesion() {
   const [errores, setErrores] = useState({ email: '', password: '' })
   const [verPassword, setVerPassword] = useState(false)
   const [estado, setEstado] = useState('')
+  const [enviando, setEnviando] = useState(false)
 
   const manejarCambio = (evento) => {
     const { name, value } = evento.target
@@ -26,7 +28,7 @@ function IniciarSesion() {
     setErrores((actual) => ({ ...actual, [name]: validadores[name](value) }))
   }
 
-  const manejarEnvio = (evento) => {
+  const manejarEnvio = async (evento) => {
     evento.preventDefault()
 
     const nuevosErrores = {
@@ -40,15 +42,16 @@ function IniciarSesion() {
       return
     }
 
-    const resultado = iniciarSesion(datos.email, datos.password)
-    if (!resultado.ok) {
-      setEstado(resultado.error)
-      return
+    setEnviando(true)
+    try {
+      const usuario = await iniciarSesion(datos.email, datos.password)
+      setEstado(`¡Bienvenido, ${usuario.nombre}!`)
+      setTimeout(() => navigate(usuario.rol === 'admin' ? '/admin' : '/'), 1000)
+    } catch (error) {
+      setEstado(mensajeErrorApi(error, 'No se pudo iniciar sesión. Inténtalo nuevamente.'))
+    } finally {
+      setEnviando(false)
     }
-
-    setEstado(`¡Bienvenido, ${resultado.usuario.nombre}!`)
-    // El admin va al panel; los clientes, al inicio
-    setTimeout(() => navigate(resultado.usuario.rol === 'admin' ? '/admin' : '/'), 1000)
   }
 
   return (
@@ -85,8 +88,10 @@ function IniciarSesion() {
               </button>
             </CampoFormulario>
 
-            <button type="submit" className="boton-enviar-login">Iniciar sesión</button>
-            <p id="mensaje-estado-login">{estado}</p>
+            <button type="submit" className="boton-enviar-login" disabled={enviando}>
+              {enviando ? 'Ingresando...' : 'Iniciar sesión'}
+            </button>
+            <p id="mensaje-estado-login" role="status">{estado}</p>
           </form>
 
           <p className="texto-separador">O continúa con</p>

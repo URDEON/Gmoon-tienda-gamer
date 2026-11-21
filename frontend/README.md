@@ -1,16 +1,26 @@
-# React + Vite
+# Gmoon frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend React/Vite de la tienda Gmoon.
 
-Currently, two official plugins are available:
+## Desarrollo local
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```powershell
+npm install
+npm run dev
+```
 
-## React Compiler
+El gateway Spring Boot debe estar activo en `http://localhost:5050`. Esa URL se puede cambiar en `VITE_GATEWAY_URL` (ver `.env.example`). `VITE_API_URL` sigue reservado para el servicio de correo local.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+El login y registro usan `MS-seguridad` y `MS-usuarios`; el catálogo se carga desde `MS-productos`; el checkout registra la boleta en `MS-pedidos`. El token JWT se envía en las peticiones protegidas. Si falla el backend, la pantalla muestra el error y no simula que la compra se registró.
 
-## Expanding the ESLint configuration
+El backend vuelve a validar el precio, descuento y stock disponible al registrar la boleta. Como el pago es solo una simulación, el stock se valida pero no se descuenta ni reserva. En el panel, la gestión de usuarios usa el backend; los productos, categorías e historial administrativo todavía se mantienen localmente.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Verificación
+
+```powershell
+npm run test:run
+npm run lint
+npm run build
+```
+
+El checkout registra la boleta, pero no procesa pagos reales ni reserva inventario.

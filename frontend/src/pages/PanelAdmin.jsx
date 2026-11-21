@@ -1,17 +1,14 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { guardarGrupo, guardarProductos, formatearPrecio, obtenerOferta } from '../data/productos'
 import { obtenerOrdenesPorCorreo } from '../data/ordenes'
+import { registrarCuentaApi } from '../api/auth'
+import { actualizarUsuarioApi, listarUsuariosApi } from '../api/usuarios'
+import { mensajeErrorApi } from '../api/http'
 import { useOrdenes } from '../hooks/useOrdenes'
 import { useProductos } from '../hooks/useProductos'
 import { useGrupos } from '../hooks/useGrupos'
 import { generarHtmlComprobante } from '../utils/emailService'
-import {
-  actualizarUsuario,
-  obtenerPerfilAdministrador,
-  obtenerUsuarios,
-  registrarUsuario,
-} from '../utils/usuarios'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/useAuth'
 import '../styles/admin.css'
 
 const UMBRAL_STOCK_CRITICO = 3
@@ -40,8 +37,6 @@ const vistas = [
   { id: 'perfil', nombre: 'Perfil' },
 ]
 
-const obtenerClientes = () => obtenerUsuarios().map(({ nombre, email, rol }) => ({ nombre, email, rol }))
-
 function crearId(nombre, catalogo) {
   const slug = nombre
     .normalize('NFD')
@@ -64,19 +59,18 @@ function PanelAdmin() {
   const productos = useProductos()
   const ordenes = useOrdenes()
   const grupos = useGrupos()
-  const [clientes, setClientes] = useState(obtenerClientes)
+  const [clientes, setClientes] = useState([])
   const [vista, setVista] = useState('productos')
   const [productoEditando, setProductoEditando] = useState(null)
   const [formulario, setFormulario] = useState(() => crearFormularioVacio(grupos))
   const [nombreCategoria, setNombreCategoria] = useState('')
   const [usuarioEditando, setUsuarioEditando] = useState(null)
-  const [formularioUsuario, setFormularioUsuario] = useState({ nombre: '', email: '', password: '' })
+  const [formularioUsuario, setFormularioUsuario] = useState({ nombre: '', email: '' })
   const [vistaUsuarios, setVistaUsuarios] = useState('lista')
   const [usuarioHistorial, setUsuarioHistorial] = useState(null)
   const [nuevoUsuario, setNuevoUsuario] = useState({ nombre: '', email: '', password: '', confirmacion: '' })
   const [perfilAdmin, setPerfilAdmin] = useState(() => {
-    const perfil = obtenerPerfilAdministrador()
-    return { nombre: perfil.nombre, email: perfil.email, password: '' }
+    return { nombre: usuario?.nombre || '', email: usuario?.email || '' }
   })
   const [mensaje, setMensaje] = useState('')
   const [error, setError] = useState('')
@@ -84,6 +78,29 @@ function PanelAdmin() {
   const [htmlBoleta, setHtmlBoleta] = useState('')
   const [cargandoBoleta, setCargandoBoleta] = useState(false)
   const iframeBoleta = useRef(null)
+
+  useEffect(() => {
+    let activo = true
+    listarUsuariosApi()
+      .then((usuarios) => {
+        if (activo) {
+          setClientes(usuarios.map((cliente) => ({
+            ...cliente,
+            rol: cliente.rol.toLowerCase(),
+          })))
+          const perfilActual = usuarios.find((cliente) => cliente.id === usuario?.id)
+          if (perfilActual) {
+            setPerfilAdmin({ nombre: perfilActual.nombre, email: perfilActual.email })
+          }
+        }
+      })
+      .catch((errorCarga) => {
+        if (activo) setError(mensajeErrorApi(errorCarga, 'No se pudieron cargar los usuarios.'))
+      })
+    return () => {
+      activo = false
+    }
+  }, [usuario?.id])
 
   const productosCriticos = productos.filter((producto) => producto.stock <= UMBRAL_STOCK_CRITICO)
   const productosEnOferta = productos.filter((producto) => obtenerOferta(producto))
@@ -99,7 +116,7 @@ function PanelAdmin() {
     setProductoEditando(null)
     setFormulario(crearFormularioVacio(grupos))
     setUsuarioEditando(null)
-    setFormularioUsuario({ nombre: '', email: '', password: '' })
+    setFormularioUsuario({ nombre: '', email: '' })
     setVistaUsuarios('lista')
     setUsuarioHistorial(null)
     setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '' })
@@ -196,29 +213,40 @@ function PanelAdmin() {
 
   const iniciarEdicionUsuario = (cliente) => {
     setUsuarioEditando(cliente.email)
-    setFormularioUsuario({ nombre: cliente.nombre, email: cliente.email, password: '' })
+    setFormularioUsuario({ nombre: cliente.nombre, email: cliente.email })
     setMensaje('')
     setError('')
   }
 
-  const guardarEdicionUsuario = (event) => {
+  const guardarEdicionUsuario = async (event) => {
     event.preventDefault()
     setError('')
     setMensaje('')
 
-    const resultado = actualizarUsuario(usuarioEditando, formularioUsuario)
-    if (!resultado.ok) {
-      setError(resultado.error)
+    const cliente = clientes.find((actual) => actual.email === usuarioEditando)
+    if (!cliente) {
+      setError('No se encontró el usuario que quieres editar.')
       return
     }
 
-    setClientes(obtenerClientes())
-    setUsuarioEditando(null)
-    setFormularioUsuario({ nombre: '', email: '', password: '' })
-    setMensaje('Datos del usuario actualizados correctamente.')
+    try {
+      const actualizado = await actualizarUsuarioApi(cliente.id, {
+        nombre: formularioUsuario.nombre,
+        email: cliente.email,
+        rol: cliente.rol,
+      })
+      setClientes((actuales) => actuales.map((item) => item.id === actualizado.id
+        ? { ...actualizado, rol: actualizado.rol.toLowerCase() }
+        : item))
+      setUsuarioEditando(null)
+      setFormularioUsuario({ nombre: '', email: '' })
+      setMensaje('Datos del usuario actualizados correctamente.')
+    } catch (errorActualizacion) {
+      setError(mensajeErrorApi(errorActualizacion, 'No se pudo actualizar el usuario.'))
+    }
   }
 
-  const crearUsuario = (event) => {
+  const crearUsuario = async (event) => {
     event.preventDefault()
     setError('')
     setMensaje('')
@@ -228,30 +256,33 @@ function PanelAdmin() {
       return
     }
 
-    const resultado = registrarUsuario(nuevoUsuario)
-    if (!resultado.ok) {
-      setError(resultado.error)
-      return
+    try {
+      await registrarCuentaApi(nuevoUsuario)
+      const usuarios = await listarUsuariosApi()
+      setClientes(usuarios.map((cliente) => ({
+        ...cliente,
+        rol: cliente.rol.toLowerCase(),
+      })))
+      setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '' })
+      setVistaUsuarios('lista')
+      setMensaje('Usuario y credenciales creados correctamente.')
+    } catch (errorCreacion) {
+      setError(mensajeErrorApi(errorCreacion, 'No se pudo crear el usuario.'))
     }
-
-    setClientes(obtenerClientes())
-    setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '' })
-    setVistaUsuarios('lista')
-    setMensaje('Usuario creado correctamente.')
   }
 
-  const guardarPerfil = (event) => {
+  const guardarPerfil = async (event) => {
     event.preventDefault()
     setError('')
     setMensaje('')
 
-    const resultado = actualizarPerfilAdmin(perfilAdmin)
+    const resultado = await actualizarPerfilAdmin(perfilAdmin)
     if (!resultado.ok) {
       setError(resultado.error)
       return
     }
 
-    setPerfilAdmin((actual) => ({ ...actual, ...resultado.usuario, password: '' }))
+    setPerfilAdmin((actual) => ({ ...actual, ...resultado.usuario }))
     setMensaje('Perfil de administrador actualizado correctamente.')
   }
 
@@ -829,27 +860,9 @@ function PanelAdmin() {
                     <label>
                       Correo electrónico
                       <input
-                        required
                         type="email"
+                        readOnly
                         value={formularioUsuario.email}
-                        onChange={(event) => setFormularioUsuario({
-                          ...formularioUsuario,
-                          email: event.target.value,
-                        })}
-                      />
-                    </label>
-                    <label className="campo-producto-completo">
-                      Nueva contraseña (opcional)
-                      <input
-                        type="password"
-                        minLength="8"
-                        autoComplete="new-password"
-                        value={formularioUsuario.password}
-                        onChange={(event) => setFormularioUsuario({
-                          ...formularioUsuario,
-                          password: event.target.value,
-                        })}
-                        placeholder="Deja vacío para no cambiarla"
                       />
                     </label>
                   </div>
@@ -975,7 +988,7 @@ function PanelAdmin() {
         <section aria-labelledby="titulo-perfil-admin">
           <h2 className="titulo-tabla-admin" id="titulo-perfil-admin">Perfil de administrador</h2>
           <p className="descripcion-dashboard">
-            Actualiza tus datos de acceso. Si no deseas cambiar la contraseña, deja el campo vacío.
+            Actualiza el nombre de tu perfil. El correo y las credenciales se administran en el backend.
           </p>
           <form className="formulario-producto-admin" onSubmit={guardarPerfil}>
             <div className="campos-producto-admin">
@@ -992,21 +1005,9 @@ function PanelAdmin() {
               <label>
                 Correo electrónico
                 <input
-                  required
                   type="email"
+                  readOnly
                   value={perfilAdmin.email}
-                  onChange={(event) => setPerfilAdmin({ ...perfilAdmin, email: event.target.value })}
-                />
-              </label>
-              <label className="campo-producto-completo">
-                Nueva contraseña (opcional)
-                <input
-                  type="password"
-                  minLength="8"
-                  autoComplete="new-password"
-                  value={perfilAdmin.password}
-                  onChange={(event) => setPerfilAdmin({ ...perfilAdmin, password: event.target.value })}
-                  placeholder="Deja vacío para no cambiarla"
                 />
               </label>
             </div>

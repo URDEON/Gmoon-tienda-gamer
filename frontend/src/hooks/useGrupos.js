@@ -1,4 +1,9 @@
-import { useSyncExternalStore } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
+import {
+  cargarCatalogo,
+  obtenerEstadoCatalogo,
+  suscribirseAlEstadoCatalogo,
+} from '../api/catalogoStore'
 import {
   obtenerGrupos,
   obtenerRevisionGrupos,
@@ -7,5 +12,12 @@ import {
 
 export function useGrupos() {
   useSyncExternalStore(suscribirseAGrupos, obtenerRevisionGrupos)
-  return obtenerGrupos()
+  const estado = useSyncExternalStore(
+    suscribirseAlEstadoCatalogo,
+    obtenerEstadoCatalogo,
+  )
+  useEffect(() => {
+    void cargarCatalogo()
+  }, [])
+  return estado.cargando || estado.error ? [] : obtenerGrupos()
 }

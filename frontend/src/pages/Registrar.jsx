@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CampoFormulario from '../components/CampoFormulario'
 import { validarNombre, validarEmail, validarPassword, validarConfirmacion } from '../utils/validaciones'
-import { registrarUsuario } from '../utils/usuarios'
+import { useAuth } from '../context/useAuth'
+import { mensajeErrorApi } from '../api/http'
 import '../styles/login.css'
 
 const VACIO = { nombre: '', email: '', password: '', confirmacion: '' }
@@ -17,10 +18,12 @@ const validarCampo = (name, value, datos) => {
 
 function Registrar() {
   const navigate = useNavigate()
+  const { registrar } = useAuth()
   const [datos, setDatos] = useState(VACIO)
   const [errores, setErrores] = useState(VACIO)
   const [verPassword, setVerPassword] = useState(false)
   const [estado, setEstado] = useState('')
+  const [enviando, setEnviando] = useState(false)
 
   const manejarCambio = (evento) => {
     const { name, value } = evento.target
@@ -32,7 +35,7 @@ function Registrar() {
     setErrores((actual) => ({ ...actual, [name]: validarCampo(name, value, datos) }))
   }
 
-  const manejarEnvio = (evento) => {
+  const manejarEnvio = async (evento) => {
     evento.preventDefault()
 
     const nuevosErrores = {
@@ -48,15 +51,17 @@ function Registrar() {
       return
     }
 
-    const resultado = registrarUsuario(datos)
-    if (!resultado.ok) {
-      setEstado(resultado.error)
-      return
+    setEnviando(true)
+    try {
+      const usuario = await registrar(datos)
+      setEstado('¡Cuenta creada! Te llevamos a la tienda...')
+      setDatos(VACIO)
+      setTimeout(() => navigate(usuario.rol === 'admin' ? '/admin' : '/'), 800)
+    } catch (error) {
+      setEstado(mensajeErrorApi(error, 'No se pudo completar el registro. Inténtalo nuevamente.'))
+    } finally {
+      setEnviando(false)
     }
-
-    setEstado('¡Cuenta creada! Te llevamos a iniciar sesión...')
-    setDatos(VACIO)
-    setTimeout(() => navigate('/iniciar-sesion'), 1200)
   }
 
   const tipoPassword = verPassword ? 'text' : 'password'
@@ -114,8 +119,10 @@ function Registrar() {
               </button>
             </CampoFormulario>
 
-            <button type="submit" className="boton-enviar-login">Crear cuenta</button>
-            <p id="mensaje-estado-registro">{estado}</p>
+            <button type="submit" className="boton-enviar-login" disabled={enviando}>
+              {enviando ? 'Creando cuenta...' : 'Crear cuenta'}
+            </button>
+            <p id="mensaje-estado-registro" role="status">{estado}</p>
           </form>
 
           <p className="texto-registro">
