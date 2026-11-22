@@ -63,6 +63,17 @@ describe('HTTP client authentication', () => {
     }).headers.Authorization).toBe('Bearer admin-jwt')
   })
 
+  it('omits the access token for public profile registration', () => {
+    establecerTokenAcceso('client-jwt')
+
+    expect(interceptors.request({
+      url: '/api/v1/usuarios',
+      method: 'post',
+      skipAuth: true,
+      headers: {},
+    }).headers.Authorization).toBeUndefined()
+  })
+
   it('shares one rotation request between simultaneous session restorations', async () => {
     let completarRenovacion
     interceptors.post.mockReturnValueOnce(new Promise((resolve) => {

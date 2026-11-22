@@ -13,6 +13,7 @@ export const api = axios.create({
 })
 
 function esRutaSinAutenticacion(config) {
+  if (config.skipAuth) return true
   const metodo = config.method?.toUpperCase()
   const ruta = (config.url || '').split('?')[0].replace(/\/$/, '')
   if (metodo === 'POST' && [

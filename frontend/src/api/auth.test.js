@@ -33,7 +33,7 @@ describe('registrarCuentaApi', () => {
     })
 
     expect(api.post.mock.calls).toEqual([
-      ['/api/v1/usuarios', { nombre: 'Ana', email: 'ana@example.com', rol: 'CLIENTE' }],
+      ['/api/v1/usuarios', { nombre: 'Ana', email: 'ana@example.com', rol: 'CLIENTE' }, { skipAuth: true }],
       ['/auth/registrar', { usuarioId: 12, email: 'ana@example.com', password: 'segura123' }],
     ])
     expect(result).toMatchObject({ token: 'jwt', nombre: 'Ana' })

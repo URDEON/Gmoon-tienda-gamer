@@ -1,3 +1,4 @@
+
 import { api, mensajeErrorApi, renovarSesionHttp } from './http'
 
 export async function iniciarSesionApi(email, password) {
@@ -22,7 +23,7 @@ export async function registrarCuentaApi({ nombre, email, password }) {
     nombre: nombre.trim(),
     email: correo,
     rol: 'CLIENTE',
-  })
+  }, { skipAuth: true })
 
   try {
     const { data } = await api.post('/auth/registrar', {
