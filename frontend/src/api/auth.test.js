@@ -1,18 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { api, mensajeErrorApi } = vi.hoisted(() => ({
+const { api, mensajeErrorApi, renovarSesionHttp } = vi.hoisted(() => ({
   api: { post: vi.fn() },
   mensajeErrorApi: vi.fn((error) => error.message),
+  renovarSesionHttp: vi.fn(),
 }))
 
-vi.mock('./http', () => ({ api, mensajeErrorApi }))
+vi.mock('./http', () => ({ api, mensajeErrorApi, renovarSesionHttp }))
 
-import { registrarCuentaApi } from './auth'
+import {
+  registrarClienteAdministrativoApi,
+  registrarCuentaApi,
+  registrarCuentaDesdeAdminApi,
+} from './auth'
 
 describe('registrarCuentaApi', () => {
   beforeEach(() => {
     api.post.mockReset()
     mensajeErrorApi.mockClear()
+    renovarSesionHttp.mockReset()
   })
 
   it('creates the public profile before registering its credentials', async () => {
@@ -43,6 +49,65 @@ describe('registrarCuentaApi', () => {
       nombre: 'Ana',
       email: 'ana@example.com',
       password: 'segura123',
+    })).rejects.toMatchObject({
+      perfilCreado: true,
+      message: expect.stringContaining('El perfil se creó'),
+    })
+  })
+
+  it('creates an administrative client account without invoking login registration', async () => {
+    api.post.mockResolvedValueOnce({ data: { usuarioId: 12, rol: 'CLIENTE' } })
+
+    await registrarClienteAdministrativoApi({
+      usuarioId: 12,
+      email: ' CLIENTE@EXAMPLE.COM ',
+      password: 'segura123',
+    })
+
+    expect(api.post).toHaveBeenCalledWith('/auth/registrar-cliente', {
+      usuarioId: 12,
+      email: 'cliente@example.com',
+      password: 'segura123',
+    })
+  })
+
+  it('creates a vendor profile before its privileged credentials', async () => {
+    api.post
+      .mockResolvedValueOnce({ data: { id: 21, email: 'vendedor@example.com' } })
+      .mockResolvedValueOnce({ data: { rol: 'VENDEDOR' } })
+
+    await registrarCuentaDesdeAdminApi({
+      nombre: 'Vendedor Uno',
+      email: ' VENDEDOR@EXAMPLE.COM ',
+      password: 'segura123',
+      rol: 'vendedor',
+    })
+
+    expect(api.post.mock.calls).toEqual([
+      ['/api/v1/usuarios', {
+        nombre: 'Vendedor Uno',
+        email: 'vendedor@example.com',
+        rol: 'VENDEDOR',
+      }],
+      ['/auth/registrar-privilegiado', {
+        usuarioId: 21,
+        email: 'vendedor@example.com',
+        password: 'segura123',
+        rol: 'VENDEDOR',
+      }],
+    ])
+  })
+
+  it('explains that a profile already exists when credential registration fails', async () => {
+    api.post
+      .mockResolvedValueOnce({ data: { id: 21, email: 'vendedor@example.com' } })
+      .mockRejectedValueOnce(new Error('Seguridad no disponible'))
+
+    await expect(registrarCuentaDesdeAdminApi({
+      nombre: 'Vendedor Uno',
+      email: 'vendedor@example.com',
+      password: 'segura123',
+      rol: 'VENDEDOR',
     })).rejects.toMatchObject({
       perfilCreado: true,
       message: expect.stringContaining('El perfil se creó'),

@@ -1,0 +1,157 @@
+GMOON - ENLACES SWAGGER, POSTMAN Y AUTENTICACION
+================================================
+
+ENTORNOS LOCALES
+----------------
+Frontend:   http://localhost:5173
+Gateway:    http://localhost:5050
+Eureka:     http://localhost:8761
+Seguridad:  http://localhost:8082
+Usuarios:   http://localhost:8084
+Productos:  http://localhost:8085
+Pedidos:    http://localhost:8088
+
+No publiques passwords, JWT ni refresh cookies en Git ni en capturas.
+
+
+SWAGGER DIRECTO
+---------------
+http://localhost:8082/swagger-ui.html
+http://localhost:8084/swagger-ui.html
+http://localhost:8085/swagger-ui.html
+http://localhost:8088/swagger-ui.html
+
+OpenAPI JSON directo:
+http://localhost:8082/v3/api-docs
+http://localhost:8084/v3/api-docs
+http://localhost:8085/v3/api-docs
+http://localhost:8088/v3/api-docs
+
+
+SWAGGER JSON POR EL GATEWAY
+---------------------------
+http://localhost:5050/docs/seguridad/v3/api-docs
+http://localhost:5050/docs/usuarios/v3/api-docs
+http://localhost:5050/docs/productos/v3/api-docs
+http://localhost:5050/docs/pedidos/v3/api-docs
+
+
+CONFIGURACION POSTMAN
+---------------------
+Usa http://localhost:5050 como base.
+Crea un Environment con:
+
+base_url     = http://localhost:5050
+access_token = el token recibido al iniciar sesion
+
+Para solicitudes autenticadas usa en Authorization:
+
+Bearer Token
+Token: {{access_token}}
+
+Tambien puedes usar el encabezado:
+Authorization: Bearer {{access_token}}
+
+
+LOGIN
+-----
+POST {{base_url}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "correo@ejemplo.com",
+  "password": "tu-password"
+}
+
+La respuesta incluye el campo "token". Copia solo el valor, sin "Bearer".
+El login tambien crea una cookie HttpOnly gmoon_refresh.
+Postman puede conservarla en su cookie jar para /auth/refresh.
+
+
+RENOVAR SESION
+--------------
+POST {{base_url}}/auth/refresh
+
+Sin Authorization y sin body.
+La respuesta entrega un nuevo "token". Actualiza access_token en Postman.
+
+Si Postman no envia la cookie, abre Cookies y verifica que localhost tenga
+gmoon_refresh. /auth/logout revoca la sesion y elimina la cookie.
+
+
+RUTAS DE POSTMAN
+----------------
+POST /auth/login
+POST /auth/refresh
+POST /auth/logout
+POST /auth/registrar
+POST /auth/registrar-cliente
+POST /auth/registrar-privilegiado
+
+POST   /api/v1/usuarios
+GET    /api/v1/usuarios
+GET    /api/v1/usuarios/{id}
+PUT    /api/v1/usuarios/{id}
+DELETE /api/v1/usuarios/{id}
+
+GET    /api/v1/productos
+GET    /api/v1/productos/{id}
+GET    /api/v1/productos/categoria/{categoriaId}
+POST   /api/v1/productos
+PUT    /api/v1/productos/{id}
+DELETE /api/v1/productos/{id}
+
+GET    /api/v1/categorias
+GET    /api/v1/categorias/{id}
+POST   /api/v1/categorias
+PUT    /api/v1/categorias/{id}
+DELETE /api/v1/categorias/{id}
+
+POST   /api/v1/boletas
+GET    /api/v1/boletas
+GET    /api/v1/boletas/{id}
+GET    /api/v1/boletas/usuario/{usuarioId}
+PUT    /api/v1/boletas/{id}/estado
+DELETE /api/v1/boletas/{id}
+
+
+ROLES
+-----
+CLIENTE:
+- Compra y consulta solo sus propias boletas.
+- Abre /mis-compras.
+
+VENDEDOR:
+- Consulta catalogo y boletas.
+- No administra usuarios ni crea boletas.
+- Abre /vendedor.
+
+ADMIN:
+- Administra usuarios, productos y categorias.
+- Consulta boletas.
+- Crea cuentas CLIENTE y VENDEDOR.
+- Abre /admin.
+
+
+EJEMPLO BOLETA
+--------------
+POST {{base_url}}/api/v1/boletas
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "clienteNombre": "Cliente Gmoon",
+  "email": "cliente@ejemplo.com",
+  "tipoComprobante": "BOLETA",
+  "items": [
+    {
+      "id": "42",
+      "nombre": "Producto existente",
+      "cantidad": 1,
+      "precioUnitario": 1000
+    }
+  ]
+}
+
+El backend consulta el producto y recalcula precio y total.
+La compra es simulada: no cobra ni descuenta stock.

@@ -1,20 +1,27 @@
 import axios from 'axios'
 
-export const TOKEN_KEY = 'gmoon-react-token'
+const SESSION_KEY = 'gmoon-react-sesion'
+let accessToken = null
+let refreshPromise = null
+
+const baseURL = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:5050'
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_GATEWAY_URL || 'http://localhost:5050',
+  baseURL,
   timeout: 15000,
+  withCredentials: true,
 })
 
-function esRutaPublica(config) {
+function esRutaSinAutenticacion(config) {
   const metodo = config.method?.toUpperCase()
   const ruta = (config.url || '').split('?')[0].replace(/\/$/, '')
-  if (metodo === 'POST' && (
-    ruta === '/auth/login'
-    || ruta === '/auth/registrar'
-    || ruta === '/api/v1/usuarios'
-  )) {
+  if (metodo === 'POST' && [
+    '/auth/login',
+    '/auth/registrar',
+    '/auth/validar',
+    '/auth/refresh',
+    '/auth/logout',
+  ].includes(ruta)) {
     return true
   }
   return metodo === 'GET' && (
@@ -25,22 +32,64 @@ function esRutaPublica(config) {
   )
 }
 
+export function establecerTokenAcceso(token) {
+  accessToken = token || null
+}
+
+export function limpiarTokenAcceso() {
+  accessToken = null
+}
+
+export function renovarSesionHttp() {
+  if (!refreshPromise) {
+    refreshPromise = axios.post(`${baseURL}/auth/refresh`, null, {
+      timeout: 15000,
+      withCredentials: true,
+    }).then(({ data }) => data).finally(() => {
+      refreshPromise = null
+    })
+  }
+  return refreshPromise
+}
+
+async function renovarTokenAcceso() {
+  const data = await renovarSesionHttp()
+  if (!data?.token) {
+    throw new Error('El backend no devolvió un token de acceso al renovar la sesión.')
+  }
+  establecerTokenAcceso(data.token)
+  return data.token
+}
+
 api.interceptors.request.use((config) => {
-  const token = esRutaPublica(config) ? null : localStorage.getItem(TOKEN_KEY)
-  if (token) {
+  if (!esRutaSinAutenticacion(config) && accessToken) {
     config.headers = config.headers || {}
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${accessToken}`
   }
   return config
 })
 
-api.interceptors.response.use((response) => response, (error) => {
-  if (error.response?.status === 401 && error.config?.headers?.Authorization) {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem('gmoon-react-sesion')
-    window.dispatchEvent(new Event('gmoon:session-expired'))
+api.interceptors.response.use((response) => response, async (error) => {
+  const config = error.config
+  if (error.response?.status !== 401 || !config || config._retry || esRutaSinAutenticacion(config)) {
+    return Promise.reject(error)
   }
-  return Promise.reject(error)
+
+  config._retry = true
+  try {
+    const token = await renovarTokenAcceso()
+    config.headers = config.headers || {}
+    config.headers.Authorization = `Bearer ${token}`
+    return await api(config)
+  } catch (refreshError) {
+    limpiarTokenAcceso()
+    localStorage.removeItem(SESSION_KEY)
+    const mensaje = refreshError.response?.status === 401
+      ? 'Tu sesión expiró. Inicia sesión nuevamente.'
+      : 'No se pudo renovar la sesión. Comprueba la conexión e inicia sesión de nuevo.'
+    window.dispatchEvent(new CustomEvent('gmoon:session-expired', { detail: { mensaje } }))
+    return Promise.reject(error)
+  }
 })
 
 export function mensajeErrorApi(error, mensajePredeterminado) {

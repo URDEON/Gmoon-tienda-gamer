@@ -1,10 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import { guardarGrupo, guardarProductos, formatearPrecio, obtenerOferta } from '../data/productos'
-import { obtenerOrdenesPorCorreo } from '../data/ordenes'
-import { registrarCuentaApi } from '../api/auth'
+import { formatearPrecio, obtenerOferta } from '../data/productos'
+import {
+  registrarCuentaDesdeAdminApi,
+} from '../api/auth'
 import { actualizarUsuarioApi, listarUsuariosApi } from '../api/usuarios'
+import {
+  actualizarProductoApi,
+  actualizarCategoriaApi,
+  crearCategoriaApi,
+  crearProductoApi,
+  desactivarCategoriaApi,
+  desactivarProductoApi,
+  listarCategoriasAdminApi,
+} from '../api/administracionCatalogo'
+import { listarBoletasApi } from '../api/boletas'
 import { mensajeErrorApi } from '../api/http'
-import { useOrdenes } from '../hooks/useOrdenes'
+import { obtenerEstadoCatalogo, reintentarCargaCatalogo } from '../api/catalogoStore'
 import { useProductos } from '../hooks/useProductos'
 import { useGrupos } from '../hooks/useGrupos'
 import { generarHtmlComprobante } from '../utils/emailService'
@@ -13,10 +24,11 @@ import '../styles/admin.css'
 
 const UMBRAL_STOCK_CRITICO = 3
 
-const crearFormularioVacio = (grupos) => ({
+const crearFormularioVacio = (grupos, categorias = []) => ({
   nombre: '',
-  grupo: grupos[0]?.nombre || '',
-  categoria: grupos[0]?.nombre || '',
+  grupo: categorias[0]?.grupo || grupos[0]?.nombre || '',
+  categoria: categorias[0]?.nombre || '',
+  categoriaId: categorias[0]?.id == null ? '' : String(categorias[0].id),
   descripcion: '',
   precio: '',
   descuento: '0',
@@ -37,38 +49,30 @@ const vistas = [
   { id: 'perfil', nombre: 'Perfil' },
 ]
 
-function crearId(nombre, catalogo) {
-  const slug = nombre
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-
-  let id = `${slug}-${Date.now()}`
-  let sufijo = 1
-  while (catalogo.some((producto) => producto.id === id)) {
-    id = `${slug}-${Date.now()}-${sufijo}`
-    sufijo += 1
-  }
-  return id
-}
-
 function PanelAdmin() {
   const { usuario, actualizarPerfilAdmin } = useAuth()
   const productos = useProductos()
-  const ordenes = useOrdenes()
   const grupos = useGrupos()
+  const [categoriasBackend, setCategoriasBackend] = useState([])
+  const [boletasBackend, setBoletasBackend] = useState([])
   const [clientes, setClientes] = useState([])
   const [vista, setVista] = useState('productos')
   const [productoEditando, setProductoEditando] = useState(null)
   const [formulario, setFormulario] = useState(() => crearFormularioVacio(grupos))
   const [nombreCategoria, setNombreCategoria] = useState('')
+  const [categoriaEditando, setCategoriaEditando] = useState(null)
+  const [formularioCategoria, setFormularioCategoria] = useState({ nombre: '', grupo: '' })
   const [usuarioEditando, setUsuarioEditando] = useState(null)
   const [formularioUsuario, setFormularioUsuario] = useState({ nombre: '', email: '' })
   const [vistaUsuarios, setVistaUsuarios] = useState('lista')
   const [usuarioHistorial, setUsuarioHistorial] = useState(null)
-  const [nuevoUsuario, setNuevoUsuario] = useState({ nombre: '', email: '', password: '', confirmacion: '' })
+  const [nuevoUsuario, setNuevoUsuario] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+    confirmacion: '',
+    rol: 'cliente',
+  })
   const [perfilAdmin, setPerfilAdmin] = useState(() => {
     return { nombre: usuario?.nombre || '', email: usuario?.email || '' }
   })
@@ -102,9 +106,34 @@ function PanelAdmin() {
     }
   }, [usuario?.id])
 
+  useEffect(() => {
+    let activo = true
+    Promise.all([listarCategoriasAdminApi(), listarBoletasApi()])
+      .then(([categorias, boletas]) => {
+        if (activo) {
+          setCategoriasBackend(categorias)
+          setBoletasBackend(boletas)
+          setFormulario((actual) => actual.categoriaId
+            ? actual
+            : crearFormularioVacio(grupos, categorias))
+        }
+      })
+      .catch((errorCarga) => {
+        if (activo) setError(mensajeErrorApi(
+          errorCarga,
+          'No se pudieron cargar las categorías y boletas del backend.',
+        ))
+      })
+    return () => {
+      activo = false
+    }
+  }, [grupos])
+
   const productosCriticos = productos.filter((producto) => producto.stock <= UMBRAL_STOCK_CRITICO)
   const productosEnOferta = productos.filter((producto) => obtenerOferta(producto))
-  const ordenesUsuario = usuarioHistorial ? obtenerOrdenesPorCorreo(usuarioHistorial.email) : []
+  const ordenesUsuario = usuarioHistorial
+    ? boletasBackend.filter((boleta) => String(boleta.usuarioId) === String(usuarioHistorial.id))
+    : []
   const unidadesEnStock = productos.reduce((total, producto) => total + producto.stock, 0)
   const valorInventario = productos.reduce(
     (total, producto) => total + producto.precio * producto.stock,
@@ -114,12 +143,12 @@ function PanelAdmin() {
   const cambiarVista = (id) => {
     setVista(id)
     setProductoEditando(null)
-    setFormulario(crearFormularioVacio(grupos))
+    setFormulario(crearFormularioVacio(grupos, categoriasBackend))
     setUsuarioEditando(null)
     setFormularioUsuario({ nombre: '', email: '' })
     setVistaUsuarios('lista')
     setUsuarioHistorial(null)
-    setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '' })
+    setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '', rol: 'cliente' })
     setMensaje('')
     setError('')
     setOrdenMostrada(null)
@@ -131,6 +160,7 @@ function PanelAdmin() {
       nombre: producto.nombre,
       grupo: producto.grupo,
       categoria: producto.categoria,
+      categoriaId: producto.categoriaBackendId || '',
       descripcion: producto.descripcion,
       precio: String(producto.precio),
       descuento: String(obtenerOferta(producto)?.descuento || 0),
@@ -144,7 +174,13 @@ function PanelAdmin() {
     setError('')
   }
 
-  const guardarFormulario = (event) => {
+  const recargarCatalogoBackend = async () => {
+    await reintentarCargaCatalogo()
+    const estado = obtenerEstadoCatalogo()
+    if (estado.error) throw new Error(estado.error)
+  }
+
+  const guardarFormulario = async (event) => {
     event.preventDefault()
     setError('')
     setMensaje('')
@@ -152,8 +188,8 @@ function PanelAdmin() {
     const precio = Number(formulario.precio)
     const descuento = Number(formulario.descuento)
     const stock = Number(formulario.stock)
-    if (!formulario.nombre.trim() || !formulario.categoria.trim() || !formulario.imagen.trim()) {
-      setError('Completa el nombre, la categoría y la ruta de la imagen.')
+    if (!formulario.nombre.trim() || !formulario.categoriaId || !formulario.imagen.trim()) {
+      setError('Completa el nombre, selecciona una categoría y agrega la ruta de la imagen.')
       return
     }
     if (!Number.isInteger(precio) || precio <= 0) {
@@ -171,8 +207,6 @@ function PanelAdmin() {
 
     const datosProducto = {
       nombre: formulario.nombre.trim(),
-      grupo: formulario.grupo,
-      categoria: formulario.categoria.trim(),
       descripcion: formulario.descripcion.trim(),
       precio,
       descuento,
@@ -180,34 +214,97 @@ function PanelAdmin() {
       imagen: formulario.imagen.trim(),
       ...(formulario.imagenInicio.trim() ? { imagenInicio: formulario.imagenInicio.trim() } : {}),
     }
-    const catalogoActualizado = productoEditando
-      ? productos.map((producto) => (
-        producto.id === productoEditando ? { ...producto, ...datosProducto } : producto
-      ))
-      : [...productos, { id: crearId(datosProducto.nombre, productos), ...datosProducto }]
-
     try {
-      guardarProductos(catalogoActualizado)
-      setFormulario(crearFormularioVacio(grupos))
+      if (productoEditando) {
+        const producto = productos.find((actual) => actual.id === productoEditando)
+        if (!producto?.backendId) throw new Error('No se encontró el ID del producto en el backend.')
+        await actualizarProductoApi(producto.backendId, {
+          ...datosProducto,
+          categoriaId: formulario.categoriaId,
+        })
+      } else {
+        await crearProductoApi({
+          ...datosProducto,
+          categoriaId: formulario.categoriaId,
+        })
+      }
+      await recargarCatalogoBackend()
+      setFormulario(crearFormularioVacio(grupos, categoriasBackend))
       setProductoEditando(null)
       setVista('productos')
       setMensaje(productoEditando ? 'Producto actualizado correctamente.' : 'Producto creado correctamente.')
     } catch (errorGuardado) {
-      setError(`No se pudo guardar el catálogo: ${errorGuardado.message}`)
+      setError(mensajeErrorApi(errorGuardado, 'No se pudo guardar el producto en el backend.'))
     }
   }
 
-  const crearCategoria = (event) => {
+  const crearCategoria = async (event) => {
     event.preventDefault()
     setError('')
     setMensaje('')
 
     try {
-      guardarGrupo(nombreCategoria)
+      const nombre = nombreCategoria.trim().replace(/\s+/g, ' ')
+      const creada = await crearCategoriaApi({
+        nombre,
+        grupo: nombre,
+        descripcion: '',
+        imagenUrl: null,
+        activo: true,
+      })
+      setCategoriasBackend((actuales) => [...actuales, creada])
       setNombreCategoria('')
-      setMensaje('Categoría creada correctamente y disponible en el catálogo.')
+      setMensaje('Categoría creada correctamente en el backend.')
     } catch (errorGuardado) {
-      setError(errorGuardado.message)
+      setError(mensajeErrorApi(errorGuardado, 'No se pudo crear la categoría en el backend.'))
+    }
+  }
+
+  const eliminarProducto = async (producto) => {
+    setError('')
+    setMensaje('')
+    try {
+      await desactivarProductoApi(producto.backendId)
+      await recargarCatalogoBackend()
+      setMensaje('Producto desactivado correctamente.')
+    } catch (errorEliminacion) {
+      setError(mensajeErrorApi(errorEliminacion, 'No se pudo desactivar el producto.'))
+    }
+  }
+
+  const eliminarCategoria = async (categoria) => {
+    setError('')
+    setMensaje('')
+    try {
+      await desactivarCategoriaApi(categoria.id)
+      setCategoriasBackend((actuales) => actuales.filter((item) => item.id !== categoria.id))
+      await recargarCatalogoBackend()
+      setMensaje('Categoría desactivada correctamente.')
+    } catch (errorEliminacion) {
+      setError(mensajeErrorApi(errorEliminacion, 'No se pudo desactivar la categoría.'))
+    }
+  }
+
+  const guardarEdicionCategoria = async (event) => {
+    event.preventDefault()
+    setError('')
+    setMensaje('')
+    try {
+      const actualizada = await actualizarCategoriaApi(categoriaEditando, {
+        nombre: formularioCategoria.nombre.trim(),
+        grupo: formularioCategoria.grupo.trim(),
+        descripcion: '',
+        imagenUrl: null,
+        activo: true,
+      })
+      setCategoriasBackend((actuales) => actuales.map((categoria) => (
+        categoria.id === actualizada.id ? actualizada : categoria
+      )))
+      await recargarCatalogoBackend()
+      setCategoriaEditando(null)
+      setMensaje('Categoría actualizada correctamente.')
+    } catch (errorActualizacion) {
+      setError(mensajeErrorApi(errorActualizacion, 'No se pudo actualizar la categoría.'))
     }
   }
 
@@ -257,13 +354,13 @@ function PanelAdmin() {
     }
 
     try {
-      await registrarCuentaApi(nuevoUsuario)
+      await registrarCuentaDesdeAdminApi(nuevoUsuario)
       const usuarios = await listarUsuariosApi()
       setClientes(usuarios.map((cliente) => ({
         ...cliente,
         rol: cliente.rol.toLowerCase(),
       })))
-      setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '' })
+      setNuevoUsuario({ nombre: '', email: '', password: '', confirmacion: '', rol: 'cliente' })
       setVistaUsuarios('lista')
       setMensaje('Usuario y credenciales creados correctamente.')
     } catch (errorCreacion) {
@@ -302,6 +399,19 @@ function PanelAdmin() {
     }
   }
 
+  const mostrarBoletaBackend = (boleta) => mostrarBoleta({
+    ...boleta,
+    tipoComprobante: (boleta.tipoComprobante || 'BOLETA').toLowerCase(),
+    fecha: boleta.createdAt,
+    total: Number(boleta.total),
+    items: Array.isArray(boleta.items)
+      ? boleta.items.map((item) => ({
+        ...item,
+        precioUnitario: Number(item.precioUnitario),
+      }))
+      : [],
+  })
+
   const renderFormulario = () => (
     <form className="formulario-producto-admin" onSubmit={guardarFormulario}>
       <div className="campos-producto-admin">
@@ -315,29 +425,29 @@ function PanelAdmin() {
           />
         </label>
         <label>
-          Grupo
+          Categoría
           <select
-            value={formulario.grupo}
+            required
+            value={formulario.categoriaId}
             onChange={(event) => {
-              const grupo = event.target.value
+              const seleccionada = categoriasBackend.find(
+                (categoria) => String(categoria.id) === event.target.value,
+              )
               setFormulario({
                 ...formulario,
-                grupo,
-                categoria: formulario.categoria === formulario.grupo ? grupo : formulario.categoria,
+                categoriaId: event.target.value,
+                categoria: seleccionada?.nombre || '',
+                grupo: seleccionada?.grupo || '',
               })
             }}
           >
-            {grupos.map((grupo) => <option key={grupo.id} value={grupo.nombre}>{grupo.nombre}</option>)}
+            <option value="" disabled>Selecciona una categoría</option>
+            {categoriasBackend.filter((categoria) => categoria.activo !== false).map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.grupo} / {categoria.nombre}
+              </option>
+            ))}
           </select>
-        </label>
-        <label>
-          Categoría
-          <input
-            required
-            maxLength="100"
-            value={formulario.categoria}
-            onChange={(event) => setFormulario({ ...formulario, categoria: event.target.value })}
-          />
         </label>
         <label>
           Precio (CLP)
@@ -452,6 +562,14 @@ function PanelAdmin() {
                   >
                     Editar
                   </button>
+                  <button
+                    className="boton-admin-secundario"
+                    type="button"
+                    disabled={!producto.backendId}
+                    onClick={() => eliminarProducto(producto)}
+                  >
+                    Desactivar
+                  </button>
                 </td>
               </tr>
             )
@@ -539,10 +657,10 @@ function PanelAdmin() {
         <section aria-labelledby="titulo-ordenes-admin">
           <h2 className="titulo-tabla-admin" id="titulo-ordenes-admin">Órdenes y boletas</h2>
           <p className="descripcion-dashboard">
-            Compras aprobadas guardadas en este navegador. Selecciona “Mostrar boleta” para consultar o imprimir un comprobante.
+            Boletas consultadas desde el microservicio de pedidos.
           </p>
-          {ordenes.length === 0 ? (
-            <p className="vacio-admin">Todavía no hay órdenes registradas en este navegador.</p>
+          {boletasBackend.length === 0 ? (
+            <p className="vacio-admin">Todavía no hay boletas en el backend.</p>
           ) : (
             <div className="tabla-admin-contenedor">
               <table className="tabla-admin">
@@ -551,28 +669,18 @@ function PanelAdmin() {
                     <th>Número</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
-                    <th>Comprobante</th>
                     <th>Total</th>
-                    <th>Acción</th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ordenes.map((orden) => (
-                    <tr key={orden.numeroPedido}>
-                      <td>{orden.numeroPedido}</td>
-                      <td>{new Date(orden.fecha).toLocaleString('es-CL')}</td>
-                      <td>{orden.clienteNombre}<br /><small>{orden.email}</small></td>
-                      <td>{orden.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'}</td>
-                      <td>{formatearPrecio(orden.total)}</td>
-                      <td>
-                        <button
-                          className="boton-editar-admin"
-                          type="button"
-                          onClick={() => mostrarBoleta(orden)}
-                        >
-                          Mostrar boleta
-                        </button>
-                      </td>
+                  {boletasBackend.map((boleta) => (
+                    <tr key={boleta.id}>
+                      <td>{boleta.numeroPedido}</td>
+                      <td>{boleta.createdAt ? new Date(boleta.createdAt).toLocaleString('es-CL') : '—'}</td>
+                      <td>{boleta.clienteNombre}<br /><small>{boleta.email}</small></td>
+                      <td>{formatearPrecio(Number(boleta.total))}</td>
+                      <td>{boleta.estado}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -682,7 +790,7 @@ function PanelAdmin() {
         <section aria-labelledby="titulo-categorias-admin">
           <h2 className="titulo-tabla-admin" id="titulo-categorias-admin">Categorías del catálogo</h2>
           <p className="descripcion-dashboard">
-            Cada categoría crea una sección para organizar productos y aparece en el catálogo de la tienda.
+            Administra las categorías del backend y asígnalas a los productos del catálogo.
           </p>
           <form className="formulario-producto-admin formulario-categoria-admin" onSubmit={crearCategoria}>
             <label>
@@ -700,12 +808,73 @@ function PanelAdmin() {
           </form>
           <h3 className="subtitulo-reporte-admin">Categorías actuales</h3>
           <ul className="lista-categorias-admin">
-            {grupos.map((grupo) => {
-              const cantidadProductos = productos.filter((producto) => producto.grupo === grupo.nombre).length
+            {categoriasBackend.map((categoria) => {
+              const cantidadProductos = productos.filter(
+                (producto) => producto.categoriaBackendId === String(categoria.id),
+              ).length
               return (
-                <li key={grupo.id}>
-                  <span>{grupo.nombre}</span>
-                  <small>{cantidadProductos} producto{cantidadProductos === 1 ? '' : 's'}</small>
+                <li key={categoria.id}>
+                  {categoriaEditando === categoria.id ? (
+                    <form className="formulario-producto-admin" onSubmit={guardarEdicionCategoria}>
+                      <label>
+                        Nombre
+                        <input
+                          required
+                          maxLength="100"
+                          value={formularioCategoria.nombre}
+                          onChange={(event) => setFormularioCategoria({
+                            ...formularioCategoria,
+                            nombre: event.target.value,
+                          })}
+                        />
+                      </label>
+                      <label>
+                        Grupo
+                        <input
+                          required
+                          maxLength="100"
+                          value={formularioCategoria.grupo}
+                          onChange={(event) => setFormularioCategoria({
+                            ...formularioCategoria,
+                            grupo: event.target.value,
+                          })}
+                        />
+                      </label>
+                      <button className="boton-admin-principal" type="submit">Guardar</button>
+                      <button
+                        className="boton-admin-secundario"
+                        type="button"
+                        onClick={() => setCategoriaEditando(null)}
+                      >
+                        Cancelar
+                      </button>
+                    </form>
+                  ) : (
+                    <>
+                      <span>{categoria.grupo} / {categoria.nombre}</span>
+                      <small>{cantidadProductos} producto{cantidadProductos === 1 ? '' : 's'}</small>
+                      <button
+                        className="boton-editar-admin"
+                        type="button"
+                        onClick={() => {
+                          setCategoriaEditando(categoria.id)
+                          setFormularioCategoria({
+                            nombre: categoria.nombre,
+                            grupo: categoria.grupo,
+                          })
+                        }}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="boton-admin-secundario"
+                        type="button"
+                        onClick={() => eliminarCategoria(categoria)}
+                      >
+                        Desactivar
+                      </button>
+                    </>
+                  )}
                 </li>
               )
             })}
@@ -742,7 +911,7 @@ function PanelAdmin() {
 
           {vistaUsuarios === 'nuevo' && (
             <form className="formulario-producto-admin" onSubmit={crearUsuario}>
-              <h3 className="subtitulo-reporte-admin">Crear una cuenta de cliente</h3>
+              <h3 className="subtitulo-reporte-admin">Crear una cuenta de cliente o vendedor</h3>
               <div className="campos-producto-admin">
                 <label>
                   Nombre completo
@@ -762,6 +931,16 @@ function PanelAdmin() {
                     value={nuevoUsuario.email}
                     onChange={(event) => setNuevoUsuario({ ...nuevoUsuario, email: event.target.value })}
                   />
+                </label>
+                <label>
+                  Rol
+                  <select
+                    value={nuevoUsuario.rol}
+                    onChange={(event) => setNuevoUsuario({ ...nuevoUsuario, rol: event.target.value })}
+                  >
+                    <option value="cliente">Cliente</option>
+                    <option value="vendedor">Vendedor</option>
+                  </select>
                 </label>
                 <label>
                   Contraseña
@@ -825,7 +1004,11 @@ function PanelAdmin() {
                               className="boton-admin-secundario"
                               type="button"
                               onClick={() => {
-                                setUsuarioHistorial({ nombre: cliente.nombre, email: cliente.email })
+                                setUsuarioHistorial({
+                                  id: cliente.id,
+                                  nombre: cliente.nombre,
+                                  email: cliente.email,
+                                })
                                 setVistaUsuarios('historial')
                                 setUsuarioEditando(null)
                               }}
@@ -892,7 +1075,7 @@ function PanelAdmin() {
               {usuarioHistorial ? (
                 <>
                   <p className="descripcion-dashboard">
-                    Órdenes vinculadas al correo {usuarioHistorial.email}.
+                    Boletas del backend vinculadas a {usuarioHistorial.email}.
                   </p>
                   {ordenesUsuario.length === 0 ? (
                     <p className="vacio-admin">Este usuario todavía no tiene compras registradas.</p>
@@ -913,17 +1096,17 @@ function PanelAdmin() {
                           {ordenesUsuario.map((orden) => (
                             <tr key={orden.numeroPedido}>
                               <td>{orden.numeroPedido}</td>
-                              <td>{new Date(orden.fecha).toLocaleString('es-CL')}</td>
-                              <td>{orden.items.reduce((total, item) => total + item.cantidad, 0)}</td>
-                              <td>{orden.tipoComprobante === 'factura' ? 'Factura' : 'Boleta'}</td>
-                              <td>{formatearPrecio(orden.total)}</td>
+                              <td>{orden.createdAt ? new Date(orden.createdAt).toLocaleString('es-CL') : '—'}</td>
+                              <td>{(orden.items || []).reduce((total, item) => total + item.cantidad, 0)}</td>
+                              <td>{orden.tipoComprobante === 'FACTURA' ? 'Factura' : 'Boleta'}</td>
+                              <td>{formatearPrecio(Number(orden.total))}</td>
                               <td>
                                 <button
                                   className="boton-editar-admin"
                                   type="button"
                                   onClick={() => {
                                     setVista('ordenes')
-                                    mostrarBoleta(orden)
+                                    mostrarBoletaBackend(orden)
                                   }}
                                 >
                                   Mostrar boleta
@@ -965,6 +1148,7 @@ function PanelAdmin() {
                                 className="boton-editar-admin"
                                 type="button"
                                 onClick={() => setUsuarioHistorial({
+                                  id: cliente.id,
                                   nombre: cliente.nombre,
                                   email: cliente.email,
                                 })}

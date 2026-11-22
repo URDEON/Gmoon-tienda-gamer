@@ -5,6 +5,7 @@ import { useAuth } from '../context/useAuth'
 import { buscarProductos } from '../data/productos'
 import { useGrupos } from '../hooks/useGrupos'
 import { useProductos } from '../hooks/useProductos'
+import { mensajeErrorApi } from '../api/http'
 
 const apartadosInicio = [
   { nombre: 'Explora la Tienda', id: 'Explora' },
@@ -16,13 +17,14 @@ const apartadosInicio = [
 
 function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false)
+  const [errorSesion, setErrorSesion] = useState('')
   const botonRef = useRef(null)
   const menuRef = useRef(null)
   const location = useLocation()
   const navigate = useNavigate()
   const { pathname } = location
   const { totalProductos } = useCart()
-  const { usuario, esAdmin, cerrarSesion } = useAuth()
+  const { usuario, esAdmin, esVendedor, errorSesion: errorRestauracion, cerrarSesion } = useAuth()
   const grupos = useGrupos()
   const productos = useProductos()
   const estaEnInicio = pathname === '/'
@@ -76,6 +78,17 @@ function Navbar() {
     navigate(`/productos?buscar=${encodeURIComponent(consulta)}`)
   }
 
+  const salir = async () => {
+    setErrorSesion('')
+    try {
+      await cerrarSesion()
+    } catch (error) {
+      setErrorSesion(mensajeErrorApi(error, 'No se pudo cerrar la sesión. Inténtalo nuevamente.'))
+    }
+  }
+
+  const rutaCuenta = esAdmin ? '/admin' : esVendedor ? '/vendedor' : usuario ? '/mis-compras' : '/'
+
   return (
     <header className="encabezado-sitio">
       <div className="barra-superior">
@@ -118,7 +131,7 @@ function Navbar() {
 
           <Link
             className="enlace-cuenta"
-            to={usuario ? (esAdmin ? '/admin' : '/') : '/iniciar-sesion'}
+            to={usuario ? rutaCuenta : '/iniciar-sesion'}
             aria-label={usuario ? 'Mi cuenta' : 'Iniciar sesión'}
           >
             <svg
@@ -143,7 +156,7 @@ function Navbar() {
 
           <div className="acciones-compras">
             {usuario ? (
-              <button className="boton-accion-sesion" type="button" onClick={cerrarSesion}>
+              <button className="boton-accion-sesion" type="button" onClick={salir}>
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M10 17l5-5-5-5M15 12H3m9-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6" />
                 </svg>
@@ -162,6 +175,9 @@ function Navbar() {
               {totalProductos > 0 && <span className="contador-carrito">{totalProductos}</span>}
             </Link>
           </div>
+          {(errorRestauracion || errorSesion) && (
+            <p className="mensaje-error-admin" role="alert">{errorSesion || errorRestauracion}</p>
+          )}
         </div>
 
         <div

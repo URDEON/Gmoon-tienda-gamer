@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { iniciarSesionApi, registrarCuentaApi } from '../api/auth'
-import { TOKEN_KEY, mensajeErrorApi } from '../api/http'
+import { cerrarSesionApi, iniciarSesionApi, registrarCuentaApi, renovarSesionApi } from '../api/auth'
+import { establecerTokenAcceso, limpiarTokenAcceso, mensajeErrorApi } from '../api/http'
 import { actualizarUsuarioApi } from '../api/usuarios'
 import { AuthContext } from './AuthContextValue'
 import {
@@ -8,31 +8,77 @@ import {
   cerrarSesionLocal,
 } from '../utils/usuarios'
 
+function crearDatosSesion(respuesta, nombre = '') {
+  if (!respuesta?.token || !respuesta.email || !respuesta.rol || respuesta.usuarioId == null) {
+    throw new Error('El backend devolvió una respuesta de autenticación incompleta.')
+  }
+
+  return {
+    id: respuesta.usuarioId,
+    nombre: nombre || respuesta.nombre || respuesta.email.split('@')[0],
+    email: respuesta.email,
+    rol: respuesta.rol.toLowerCase(),
+  }
+}
+
 export function AuthProvider({ children }) {
-  const [usuario, setUsuario] = useState(obtenerSesion)
+  const [usuario, setUsuario] = useState(null)
+  const [cargando, setCargando] = useState(true)
+  const [errorSesion, setErrorSesion] = useState('')
 
   useEffect(() => {
-    const cerrarSesionExpirada = () => setUsuario(null)
+    let activo = true
+    const cerrarSesionExpirada = (event) => {
+      if (activo) {
+        setUsuario(null)
+        setCargando(false)
+        setErrorSesion(event.detail?.mensaje || 'La sesión ya no es válida. Inicia sesión nuevamente.')
+      }
+    }
     window.addEventListener('gmoon:session-expired', cerrarSesionExpirada)
-    return () => window.removeEventListener('gmoon:session-expired', cerrarSesionExpirada)
+
+    const restaurarSesion = async () => {
+      const sesionAnterior = obtenerSesion()
+      try {
+        const respuesta = await renovarSesionApi()
+        if (activo) {
+          const sesion = crearDatosSesion(respuesta, sesionAnterior?.nombre)
+          establecerTokenAcceso(respuesta.token)
+          localStorage.setItem('gmoon-react-sesion', JSON.stringify(sesion))
+          setUsuario(sesion)
+        }
+      } catch (error) {
+        cerrarSesionLocal()
+        limpiarTokenAcceso()
+        if (activo) {
+          setUsuario(null)
+          if (error.response?.status !== 401) {
+            setErrorSesion(mensajeErrorApi(
+              error,
+              'No se pudo restaurar la sesión. Comprueba que el backend esté disponible.',
+            ))
+          }
+        }
+      } finally {
+        if (activo) setCargando(false)
+      }
+    }
+
+    void restaurarSesion()
+    return () => {
+      activo = false
+      window.removeEventListener('gmoon:session-expired', cerrarSesionExpirada)
+    }
   }, [])
 
   const guardarSesion = (respuesta, nombre = '') => {
-    if (!respuesta?.token || !respuesta.email || !respuesta.rol || respuesta.usuarioId == null) {
-      throw new Error('El backend devolvió una respuesta de autenticación incompleta.')
-    }
-
-    const sesion = {
-      id: respuesta.usuarioId,
-      nombre: nombre || respuesta.nombre || respuesta.email.split('@')[0],
-      email: respuesta.email,
-      rol: respuesta.rol.toLowerCase(),
-    }
+    const sesion = crearDatosSesion(respuesta, nombre)
     try {
-      localStorage.setItem(TOKEN_KEY, respuesta.token)
+      establecerTokenAcceso(respuesta.token)
       localStorage.setItem('gmoon-react-sesion', JSON.stringify(sesion))
     } catch (error) {
       cerrarSesionLocal()
+      limpiarTokenAcceso()
       throw new Error(`No se pudo guardar la sesión: ${error.message}`, { cause: error })
     }
     setUsuario(sesion)
@@ -41,17 +87,22 @@ export function AuthProvider({ children }) {
 
   const iniciarSesion = async (email, password) => {
     const respuesta = await iniciarSesionApi(email, password)
+    setErrorSesion('')
     return guardarSesion(respuesta)
   }
 
   const registrar = async (datos) => {
     const respuesta = await registrarCuentaApi(datos)
+    setErrorSesion('')
     return guardarSesion(respuesta, datos.nombre.trim())
   }
 
-  const cerrarSesion = () => {
+  const cerrarSesion = async () => {
+    await cerrarSesionApi()
     cerrarSesionLocal()
+    limpiarTokenAcceso()
     setUsuario(null)
+    setErrorSesion('')
   }
 
   const actualizarPerfilAdmin = async (cambios) => {
@@ -75,9 +126,22 @@ export function AuthProvider({ children }) {
   }
 
   const esAdmin = usuario?.rol === 'admin'
+  const esVendedor = usuario?.rol === 'vendedor'
+  const esCliente = usuario?.rol === 'cliente'
 
   return (
-    <AuthContext.Provider value={{ usuario, esAdmin, iniciarSesion, registrar, cerrarSesion, actualizarPerfilAdmin }}>
+    <AuthContext.Provider value={{
+      usuario,
+      cargando,
+      errorSesion,
+      esAdmin,
+      esVendedor,
+      esCliente,
+      iniciarSesion,
+      registrar,
+      cerrarSesion,
+      actualizarPerfilAdmin,
+    }}>
       {children}
     </AuthContext.Provider>
   )

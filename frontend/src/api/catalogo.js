@@ -40,6 +40,7 @@ export async function cargarCatalogoApi() {
       ...local,
       id,
       backendId: String(producto.id),
+      categoriaBackendId: categoria.id == null ? '' : String(categoria.id),
       grupo: categoria.grupo || 'Otros',
       categoria: categoria.nombre || 'General',
       nombre: producto.nombre,
