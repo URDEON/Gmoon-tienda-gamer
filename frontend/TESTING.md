@@ -15,28 +15,30 @@ consola, `coverage/lcov.info` y el reporte HTML en `coverage/lcov-report/`.
 
 ## Pruebas automatizadas incluidas
 
-| Archivo | Casos cubiertos |
+| Archivos | Casos cubiertos |
 |---|---|
-| `src/components/RutaAdmin.test.jsx` | Redirección de usuario no autenticado; redirección de usuario no administrador; acceso de administrador. |
-| `src/utils/validaciones.test.js` | Nombre válido, vacío y demasiado corto; correo válido, vacío e inválido; contraseña válida, vacía y demasiado corta; confirmación coincidente, diferente y vacía. |
+| `src/api/*.test.js` | Integración HTTP del catálogo, usuarios, boletas, registro de cuentas, CRUD administrativo, renovación del token, reintento de solicitudes y errores de API. |
+| `src/components/Ruta*.test.jsx` | Acceso y redirección según sesión y roles ADMIN, VENDEDOR y CLIENTE. |
+| `src/pages/Checkout.test.jsx` | Creación de boleta y limpieza del carrito solo tras éxito; conservación del carrito y notificación ante error. |
+| `src/utils/*.test.js` | Validaciones de formularios y limpieza de tokens antiguos del almacenamiento local. |
 | `shared/calcularTotalesCompra.test.js` | Cálculo del IVA con total explícito; subtotal y total calculados desde los productos; carrito vacío. |
 
 ## Resultado medido
 
-Última ejecución: **18 pruebas aprobadas en 3 archivos**.
+Última ejecución: **45 pruebas aprobadas en 13 archivos**.
 
 | Métrica global | Resultado |
 |---|---:|
-| Sentencias | 4,50 % (37/821) |
-| Ramas | 4,82 % (26/539) |
-| Funciones | 2,77 % (7/252) |
-| Líneas | 3,78 % (28/739) |
+| Sentencias | 23,24 % (265/1140) |
+| Ramas | 22,93 % (172/750) |
+| Funciones | 18,20 % (63/346) |
+| Líneas | 23,72 % (246/1037) |
 
 El porcentaje global es bajo porque el reporte incluye toda la aplicación y la
 mayoría de páginas, contextos, hooks y componentes todavía no tienen pruebas
-automatizadas. Las pruebas actuales verifican principalmente control de acceso,
-validaciones de formulario y cálculo del total de compra; el porcentaje no debe
-interpretarse como cobertura completa de los flujos de la tienda.
+automatizadas. Las pruebas cubren rutas críticas de autenticación, roles,
+integración de API y checkout, pero **la cobertura global aún no alcanza el 70 %**.
+El porcentaje no debe interpretarse como cobertura completa de los flujos de la tienda.
 
 ## Alcance de Bootstrap
 

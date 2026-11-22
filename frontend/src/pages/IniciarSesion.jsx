@@ -46,7 +46,10 @@ function IniciarSesion() {
     try {
       const usuario = await iniciarSesion(datos.email, datos.password)
       setEstado(`¡Bienvenido, ${usuario.nombre}!`)
-      setTimeout(() => navigate(usuario.rol === 'admin' ? '/admin' : '/'), 1000)
+      const destino = usuario.rol === 'admin'
+        ? '/admin'
+        : usuario.rol === 'vendedor' ? '/vendedor' : '/'
+      setTimeout(() => navigate(destino), 1000)
     } catch (error) {
       setEstado(mensajeErrorApi(error, 'No se pudo iniciar sesión. Inténtalo nuevamente.'))
     } finally {

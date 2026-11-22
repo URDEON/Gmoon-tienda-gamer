@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import RutaAdmin from './components/RutaAdmin'
+import RutaVendedor from './components/RutaVendedor'
+import RutaCliente from './components/RutaCliente'
 import Inicio from './pages/Inicio'
 import Productos from './pages/Productos'
 import ProductoDetalle from './pages/ProductoDetalle'
@@ -12,6 +14,8 @@ import Blog from './pages/Blog'
 import IniciarSesion from './pages/IniciarSesion'
 import Registrar from './pages/Registrar'
 import PanelAdmin from './pages/PanelAdmin'
+import PanelVendedor from './pages/PanelVendedor'
+import MisCompras from './pages/MisCompras'
 
 function App() {
   return (
@@ -34,6 +38,22 @@ function App() {
             <RutaAdmin>
               <PanelAdmin />
             </RutaAdmin>
+          }
+        />
+        <Route
+          path="/vendedor"
+          element={
+            <RutaVendedor>
+              <PanelVendedor />
+            </RutaVendedor>
+          }
+        />
+        <Route
+          path="/mis-compras"
+          element={
+            <RutaCliente>
+              <MisCompras />
+            </RutaCliente>
           }
         />
       </Route>
